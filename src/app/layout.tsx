@@ -8,6 +8,9 @@ import { useSelector, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react"; // Import PersistGate
 import { RootState } from "../app/Redux/Store";
 
+// Loading Icon
+import { TailSpin } from 'react-loading-icons'
+
 const DebugRedux: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
   return (
@@ -37,7 +40,18 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="antialiased Panchang" style={{ fontFamily: 'ClashDisplay' }}>
         <Provider store={Store}>
-          <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+          <PersistGate loading={
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+              }}
+            >
+              <TailSpin /> 
+            </div>
+          } persistor={persistor}
+          >
             {/*<h1 className="py-4">This is the Outer Wrapper</h1>
             <DebugRedux />*/}
             {children}

@@ -15,11 +15,14 @@ const UserPage: React.FC = () => {
       id: 1,
       name: name || "Default Name", // Use input or fallback to default
       email: "john@example.com",
+      gender: "Male",
+      birthday: "1990-01-01",
       phone: "1234567890",
-      user_type: "admin",
-      company_id: 100,
-      company_username: "@company",
-      usertoken: "token123",
+      bio: "A passionate developer.",
+      reason: "Exploring opportunities.",
+      county: "Nairobi",
+      town: "Westlands",
+      interests: ["coding", "reading", "traveling"], // Array of interests
     };
 
     dispatch(setUserDetails(userData));
@@ -36,7 +39,7 @@ const UserPage: React.FC = () => {
           placeholder="Enter Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border border-gray-300 rounded-md p-2 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 text-gray-900 rounded-md p-2 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition"
