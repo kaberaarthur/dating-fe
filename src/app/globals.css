@@ -19,3 +19,213 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-BlackItalic.woff2') format('woff2');
+  font-weight: 900;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-LightItalic.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-Normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-NormalItalic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GabrielSans';
+  src: url('./fonts/GabrielSans-Trial-ThinItalic.woff2') format('woff2');
+  font-weight: 100;
+  font-style: italic;
+}
+
+/* Panchang */
+
+@font-face {
+  font-family: 'Panchang';
+  src: url('./fonts/Panchang/Panchang-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Panchang';
+  src: url('./fonts/Panchang/Panchang-Extrabold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Panchang';
+  src: url('./fonts/Panchang/Panchang-Extralight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Panchang';
+  src: url('./fonts/Panchang/Panchang-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Panchang';
+  src: url('./fonts/Panchang/Panchang-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Panchang';
+  src: url('./fonts/Panchang/Panchang-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Panchang';
+  src: url('./fonts/Panchang/Panchang-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Panchang';
+  src: url('./fonts/Panchang/Panchang-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+/* Panchang */
+
+/* Clash Dsplay */
+/* Clash Display - ExtraLight */
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('./fonts/ClashDisplay/ClashDisplay-Extralight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+}
+
+/* Clash Display - Light */
+
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('./fonts/ClashDisplay/ClashDisplay-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* Clash Display - Regular */
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('./fonts/ClashDisplay/ClashDisplay-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Clash Display - Medium */
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('./fonts/ClashDisplay/ClashDisplay-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* Clash Display - SemiBold */
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('./fonts/ClashDisplay/ClashDisplay-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* Clash Display - Bold */
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('./fonts/ClashDisplay/ClashDisplay-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Clash Display - Variable */
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('./fonts/ClashDisplay/ClashDisplay-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+/* Clash Dsplay */
+
+:root {
+  --font-family-sans: 'GabrielSans', sans-serif;
+}
+
