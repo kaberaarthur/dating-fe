@@ -3,12 +3,14 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../app/Redux/Store";
 import { incrementStep } from "../app/Redux/Reducers/stepSlice";
+import { setUserDetails } from "../app/Redux/Reducers/userSlice"; // Import your setUserDetails action
 
 const PhoneNumber: React.FC = () => {
+  const user = useSelector((state: RootState) => state.user);
   const currentStep = useSelector((state: RootState) => state.step.currentStep);
   const dispatch = useDispatch();
 
-  const [phone, setPhone] = useState<string>("");
+  const [phone, setPhone] = useState<string>(user.phone);
   const [error, setError] = useState<string>("");
 
   const isValidPhoneNumber = (number: string): boolean => {
@@ -25,6 +27,11 @@ const PhoneNumber: React.FC = () => {
 
     setError("");
     console.log("Phone number entered:", phone);
+
+    // Dispatch the phone number to Redux
+    dispatch(setUserDetails({ phone: phone }));
+
+    // Proceed to the next step
     dispatch(incrementStep());
   };
 
@@ -48,7 +55,7 @@ const PhoneNumber: React.FC = () => {
           onClick={handleSubmit}
           className="bg-purple-900 text-white font-bold py-2 px-4 rounded hover:bg-purple-950"
         >
-          Submit
+          Next
         </button>
       </form>
     </div>

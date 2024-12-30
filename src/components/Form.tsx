@@ -3,15 +3,15 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementStep } from "../app/Redux/Reducers/stepSlice";
 
+import { RootState } from "../app/Redux/Store";
+import { setUserDetails } from "../app/Redux/Reducers/userSlice";
+
 const Form: React.FC = () => {
   const currentStep = useSelector((state: any) => state.step.currentStep);
+  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
-  const handleNext = () => {
-    dispatch(incrementStep());
-  };
-
-  const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState<string>(user.email);
   const [error, setError] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,8 +22,10 @@ const Form: React.FC = () => {
       setError("");
       console.log("Email submitted:", email);
       dispatch(incrementStep());
+      dispatch(setUserDetails({ email })); // Dispatch only the email
     }
   };
+
 
   return (
     <div className="flex items-center justify-center bg-gray-100">
@@ -52,7 +54,7 @@ const Form: React.FC = () => {
           </label>
         </div>
         <button
-          onClick={handleSubmit}
+          type="submit" // Make sure the button type is 'submit' to trigger the form's onSubmit
           className="bg-purple-900 text-white font-bold py-2 px-4 rounded hover:bg-purple-950"
         >
           Next
@@ -60,7 +62,6 @@ const Form: React.FC = () => {
       </form>
     </div>
   );
-  
 };
 
 export default Form;

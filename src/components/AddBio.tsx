@@ -2,16 +2,17 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../app/Redux/Store";
 import { useState } from "react";
+import { setUserDetails } from "../app/Redux/Reducers/userSlice"; // Import your setUserDetails action
 import { incrementStep } from "../app/Redux/Reducers/stepSlice";
 
 export default function AddBio() {
-  // Use `useSelector` to get the `currentStep` from the Redux store
+  const user = useSelector((state: RootState) => state.user);
   const currentStep = useSelector((state: any) => state.step.currentStep);
 
   // Use `useDispatch` to dispatch actions
   const dispatch = useDispatch();
 
-  const [bio, setBio] = useState("");
+  const [bio, setBio] = useState(user.bio);
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -26,6 +27,7 @@ export default function AddBio() {
     setError(""); // Clear any existing error
     // alert(`Bio submitted: ${bio}`);
     dispatch(incrementStep());
+    dispatch(setUserDetails({ bio: bio }));
   };
 
   return (
@@ -45,7 +47,7 @@ export default function AddBio() {
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
             type="submit"
-            className="bg-purple-900 text-white py-2 px-4 rounded-md hover:bg-purple-950 transition"
+            className="bg-purple-900 text-white font-bold py-2 px-4 rounded-md hover:bg-purple-950 transition"
           >
             Next
           </button>

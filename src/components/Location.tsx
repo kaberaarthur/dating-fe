@@ -1,8 +1,9 @@
 "use client";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../app/Redux/Store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { incrementStep } from "../app/Redux/Reducers/stepSlice";
+import { setUserDetails } from "../app/Redux/Reducers/userSlice"; // Assuming you have a user slice with setUserDetails action
 
 // Define a type for counties and towns
 type CountiesData = {
@@ -19,7 +20,9 @@ export default function LocationSelector() {
   // Use `useSelector` to get the `currentStep` from the Redux store
   const currentStep = useSelector((state: any) => state.step.currentStep);
 
-  // Use `useDispatch` to dispatch actions
+  // Get the default county and town from the Redux store
+  const user = useSelector((state: RootState) => state.user); // Assuming the user object contains `county` and `town`
+
   const dispatch = useDispatch();
 
   const handleNext = () => {
@@ -27,9 +30,16 @@ export default function LocationSelector() {
     dispatch(incrementStep());
   };
 
-  const [selectedCounty, setSelectedCounty] = useState<string>("");
-  const [selectedTown, setSelectedTown] = useState<string>("");
+  // Set initial county and town values from Redux store (if they exist)
+  const [selectedCounty, setSelectedCounty] = useState<string>(user.county || ""); // Default to store value
+  const [selectedTown, setSelectedTown] = useState<string>(user.town || ""); // Default to store value
   const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    // If the Redux store has a county or town, update the state
+    if (user.county) setSelectedCounty(user.county);
+    if (user.town) setSelectedTown(user.town);
+  }, [user.county, user.town]);
 
   const handleCountyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const county = e.target.value;
@@ -48,7 +58,11 @@ export default function LocationSelector() {
 
     setError(""); // Clear any existing error
     console.log(`Selected County: ${selectedCounty}, Selected Town: ${selectedTown}`);
-    dispatch(incrementStep());
+
+    // Dispatch the selected county and town to the Redux store
+    dispatch(setUserDetails({ county: selectedCounty, town: selectedTown }));
+
+    dispatch(incrementStep()); // Proceed to the next step
   };
 
   return (
@@ -81,11 +95,15 @@ export default function LocationSelector() {
                 className="w-full p-3 border rounded-md focus:ring-2 focus:ring-purple-950 focus:outline-none text-gray-900"
               >
                 <option value="">Select Town</option>
-                {typedCountiesData[selectedCounty].map((town) => (
-                  <option key={town} value={town}>
-                    {town}
-                  </option>
-                ))}
+                {typedCountiesData[selectedCounty] && typedCountiesData[selectedCounty].length > 0 ? (
+                  typedCountiesData[selectedCounty].map((town) => (
+                    <option key={town} value={town}>
+                      {town}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No towns available</option>
+                )}
               </select>
             </div>
           )}

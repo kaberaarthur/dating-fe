@@ -1,15 +1,25 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../app/Redux/Store";
 import { incrementStep } from "../app/Redux/Reducers/stepSlice";
+import { setUserDetails } from "../app/Redux/Reducers/userSlice"; // Assuming you have a user slice
 
 const Birthday: React.FC = () => {
+  const user = useSelector((state: RootState) => state.user); // Accessing user data from Redux
   const currentStep = useSelector((state: RootState) => state.step.currentStep);
   const dispatch = useDispatch();
-
+  
   const [date, setDate] = useState({ month: "", day: "", year: "" });
   const [error, setError] = useState("");
+
+  // Set the initial state based on the user's birthday from Redux
+  useEffect(() => {
+    if (user.birthday) {
+      const [year, month, day] = user.birthday.split("-"); // Split the YYYY-MM-DD string
+      setDate({ month, day, year }); // Set state with the extracted values
+    }
+  }, [user.birthday]); // Run effect only when the birthday is updated
 
   const isValidDate = (month: number, day: number, year: number): boolean => {
     const date = new Date(year, month - 1, day);
@@ -45,7 +55,16 @@ const Birthday: React.FC = () => {
     }
 
     setError("");
-    console.log("Birthday entered:", `${month}/${day}/${year}`);
+
+    // Format the date as YYYY-MM-DD
+    const formattedDate = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+
+    console.log("Formatted Birthday entered:", formattedDate);
+
+    // Dispatch the formatted date to the Redux store
+    dispatch(setUserDetails({ birthday: formattedDate }));
+
+    // Move to the next step
     dispatch(incrementStep());
   };
 
@@ -63,18 +82,18 @@ const Birthday: React.FC = () => {
         <div className="flex gap-2">
           <input
             type="text"
-            placeholder="MM"
-            maxLength={2}
-            value={date.month}
-            onChange={(e) => handleChange("month", e.target.value)}
-            className="border border-gray-300 rounded p-2 w-1/3 text-center text-gray-900"
-          />
-          <input
-            type="text"
             placeholder="DD"
             maxLength={2}
             value={date.day}
             onChange={(e) => handleChange("day", e.target.value)}
+            className="border border-gray-300 rounded p-2 w-1/3 text-center text-gray-900"
+          />
+          <input
+            type="text"
+            placeholder="MM"
+            maxLength={2}
+            value={date.month}
+            onChange={(e) => handleChange("month", e.target.value)}
             className="border border-gray-300 rounded p-2 w-1/3 text-center text-gray-900"
           />
           <input
@@ -89,7 +108,6 @@ const Birthday: React.FC = () => {
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <button
           type="submit"
-          onClick={handleSubmit}
           className="bg-purple-900 text-white font-bold py-2 px-4 rounded hover:bg-purple-950"
         >
           Next

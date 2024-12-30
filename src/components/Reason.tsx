@@ -1,15 +1,25 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../app/Redux/Store";
 import { incrementStep } from "../app/Redux/Reducers/stepSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { setUserDetails } from "../app/Redux/Reducers/userSlice"; // Assuming you have a user slice with setUserDetails action
 
 const Reason: React.FC = () => {
   const currentStep = useSelector((state: RootState) => state.step.currentStep);
+  const user = useSelector((state: RootState) => state.user); // Get user data from Redux (including reason)
   const dispatch = useDispatch();
 
   const [reason, setReason] = useState<string>("");
+
   const [error, setError] = useState<string>("");
+
+  // Set initial reason value from Redux store (if it exists)
+  useEffect(() => {
+    if (user.reason) {
+      setReason(user.reason); // Preselect the stored reason from Redux if available
+    }
+  }, [user.reason]); // Run effect when `user.reason` changes
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +31,12 @@ const Reason: React.FC = () => {
     }
 
     setError(""); // Clear error if validation passes
+
     console.log("Reason selected:", reason);
+    
+    // Dispatch the selected reason to the Redux store
+    dispatch(setUserDetails({ reason }));
+
     dispatch(incrementStep()); // Proceed to the next step
   };
 
@@ -43,8 +58,8 @@ const Reason: React.FC = () => {
                   type="radio"
                   name="reason"
                   value={option}
-                  checked={reason === option}
-                  onChange={(e) => setReason(e.target.value)}
+                  checked={reason === option} // Check if the current option matches the selected reason
+                  onChange={(e) => setReason(e.target.value)} // Update reason state
                   className="text-purple-900 focus:ring-purple-900 focus:ring-2"
                 />
                 {option}

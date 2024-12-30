@@ -1,18 +1,18 @@
 "use client";
-import { useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../app/Redux/Store';
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../app/Redux/Store";
 import { incrementStep } from "../app/Redux/Reducers/stepSlice";
+import { setUserDetails } from "../app/Redux/Reducers/userSlice";
 
 const Form: React.FC = () => {
-  // Use `useSelector` to get the `currentStep` from the Redux store
-  const currentStep = useSelector((state: any) => state.step.currentStep);
+  // Use `useSelector` to get the `currentStep` and `user` (name) from the Redux store
+  const currentStep = useSelector((state: RootState) => state.step.currentStep);
+  const user = useSelector((state: RootState) => state.user); // Get user data from Redux
 
-  // Use `useDispatch` to dispatch actions
   const dispatch = useDispatch();
 
   const handleNext = () => {
-    // Dispatch the action to increment the step in the store
     dispatch(incrementStep());
   };
 
@@ -20,14 +20,25 @@ const Form: React.FC = () => {
   const [lastName, setLastName] = useState<string>("");
   const [error, setError] = useState<string>("");
 
+  // Set initial first and last name values from the Redux store if they exist
+  useEffect(() => {
+    if (user.name) {
+      const [storedFirstName, storedLastName] = user.name.split(" ");
+      setFirstName(storedFirstName || ""); // Set first name from Redux or default to empty string
+      setLastName(storedLastName || "");   // Set last name from Redux or default to empty string
+    }
+  }, [user.name]); // Run this effect when `user.name` changes
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!firstName || !lastName) {
       setError("Both first name and last name are required");
     } else {
       setError("");
-      console.log("Name submitted:", { firstName, lastName });
+      const fullName = `${firstName} ${lastName}`; // Combine first name and last name
+      console.log("Full Name submitted:", fullName);
       dispatch(incrementStep());
+      dispatch(setUserDetails({ name: fullName })); // Dispatch the full name to Redux store
     }
   };
 
@@ -69,7 +80,6 @@ const Form: React.FC = () => {
 
         <button
           type="submit"
-          onClick={handleSubmit}
           className="bg-purple-900 text-white font-bold py-2 px-4 rounded hover:bg-purple-800"
         >
           Next
