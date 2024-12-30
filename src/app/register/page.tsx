@@ -11,9 +11,10 @@ import AddBio from "../../components/AddBio";
 import Reason from "../../components/Reason";
 import Interests from "../../components/Interests";
 import Location from "../../components/Location";
+import Password from "../../components/Password";
 
 // Hero Icons
-import { BackwardIcon, CalendarDaysIcon, EnvelopeIcon, UserIcon, CubeIcon, PhoneIcon, CheckBadgeIcon, EyeDropperIcon, ListBulletIcon } from '@heroicons/react/24/solid'
+import { BackwardIcon, CalendarDaysIcon, EnvelopeIcon, UserIcon, CubeIcon, PhoneIcon, CheckBadgeIcon, EyeDropperIcon, ListBulletIcon, KeyIcon } from '@heroicons/react/24/solid'
 import { MapPinIcon } from "@heroicons/react/16/solid";
 
 const EmailPage: React.FC = () => {
@@ -25,6 +26,7 @@ const EmailPage: React.FC = () => {
 
   const steps = [
     { component: <Form />, title: "What's Your Email Address?", icon: EnvelopeIcon },
+    { component: <Password />, title: "Enter a Password", icon: KeyIcon },
     { component: <Name />, title: "Enter Your Name", icon: UserIcon },
     { component: <Gender />, title: "Select Your Gender", icon: CubeIcon },
     { component: <Birthday />, title: "When Were You Born?", icon: CalendarDaysIcon },

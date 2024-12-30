@@ -19,7 +19,7 @@ const stepSlice = createSlice({
     },
     // Action to increment the current step
     incrementStep(state) {
-      if (state.currentStep < 8) {  // Prevent going beyond the last step (assuming there are 8 steps)
+      if (state.currentStep < 9) {  // Prevent going beyond the last step (assuming there are 8 steps)
         state.currentStep += 1;
       }
     },

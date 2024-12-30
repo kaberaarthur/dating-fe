@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../app/Redux/Store"; // Assuming the store is set up correctly
 import { setUserDetails } from "../app/Redux/Reducers/userSlice"; // Action to set user details (including interests)
 
+import config from "../app/data/config.json";
+
 const Interests: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
@@ -58,6 +60,7 @@ const Interests: React.FC = () => {
       dispatch(setUserDetails({ interests: selectedInterests })); // Dispatch to Redux
       // Proceed to the next step or action
 
+      // createUser();
       setComplete(true);
     }
   };
@@ -68,8 +71,51 @@ const Interests: React.FC = () => {
   }, [storedInterests]);
 
   useEffect(() => {
-    console.log("Completed User: ", user);
+    console.log(user);
   }, [complete]);
+
+  const createUser = async () => {
+    const userData = {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      phone: user.phone,
+      user_type: "customer",
+      auth_provider: "manual",
+      email_verified: false,
+      phone_verified: false,
+      two_fa_enabled: false,
+    };
+  
+    try {
+      const response = await fetch(`${config.baseUrl}/api/users/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error creating user:", errorData);
+        return;
+      }
+  
+      const data = await response.json();
+  
+      // Save tokens to localStorage or sessionStorage
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+  
+      console.log("User created successfully:", data);
+  
+      // Optionally, redirect or perform further actions
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
+  
 
   return (
     <div
