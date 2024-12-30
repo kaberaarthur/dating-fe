@@ -117,8 +117,8 @@ const Interests: React.FC = () => {
       const data = await response.json();
   
       // Save tokens to localStorage or sessionStorage
-      // localStorage.setItem("accessToken", data.accessToken);
-      // localStorage.setItem("refreshToken", data.refreshToken);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
   
       console.log("User created successfully:", data);
 
