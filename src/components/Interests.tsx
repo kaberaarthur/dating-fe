@@ -6,6 +6,23 @@ import { setUserDetails } from "../app/Redux/Reducers/userSlice"; // Action to s
 
 import config from "../app/data/config.json";
 
+interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  user_type: string;
+  created_at: string;
+}
+
+interface UserProfileResponse {
+  message: string;
+  accessToken: string;
+  refreshToken: string;
+  user: UserData;
+}
+
+
 const Interests: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
@@ -60,7 +77,7 @@ const Interests: React.FC = () => {
       dispatch(setUserDetails({ interests: selectedInterests })); // Dispatch to Redux
       // Proceed to the next step or action
 
-      // createUser();
+      createUser();
       setComplete(true);
     }
   };
@@ -80,11 +97,6 @@ const Interests: React.FC = () => {
       email: user.email,
       password: user.password,
       phone: user.phone,
-      user_type: "customer",
-      auth_provider: "manual",
-      email_verified: false,
-      phone_verified: false,
-      two_fa_enabled: false,
     };
   
     try {
@@ -105,16 +117,68 @@ const Interests: React.FC = () => {
       const data = await response.json();
   
       // Save tokens to localStorage or sessionStorage
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
+      // localStorage.setItem("accessToken", data.accessToken);
+      // localStorage.setItem("refreshToken", data.refreshToken);
   
       console.log("User created successfully:", data);
+
+      // Proceed to Create the User Profile
+      createUserProfile(data);
+
   
       // Optionally, redirect or perform further actions
     } catch (error) {
       console.error("Unexpected error:", error);
     }
   };
+
+  const createUserProfile = async (data: UserProfileResponse) => {
+    // Assuming 'data' includes the necessary user profile information
+    const userProfileData = {
+      name: user.name,
+      date_of_birth: user.birthday,
+      gender: user.gender,
+      bio: user.bio,
+      reason: user.reason,
+      interests: user.interests,
+      county: user.county,
+      town: user.town
+    };
+
+    const accessToken = data.accessToken;
+
+    if (!accessToken) {
+      console.error("Access token is missing.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${config.baseUrl}/api/user-profiles`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`, // Add the bearer token in the Authorization header
+        },
+        body: JSON.stringify(userProfileData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error creating user profile:", errorData);
+        return;
+      }
+
+      const result = await response.json();
+      console.log("User profile created successfully:", result);
+
+      // Handle successful response
+      // Example: Redirect to another page or display success message
+
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+};
+
   
 
   return (
