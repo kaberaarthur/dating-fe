@@ -1,5 +1,6 @@
 import React from "react";
 import joto from '../../../../public/joto.png';
+import socialpendo from '../../../../public/socialpendo.png';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -58,10 +59,10 @@ const Footer = () => {
 
         {/* Footer Bottom Section */}
         <div className="mt-8 text-center border-t border-gray-700 pt-4 flex flex-col items-center">
-            <img src={joto.src} alt="Joto Logo" className="h-24 w-auto mb-2" />
-            <p className="text-sm text-gray-500">&copy; Joto {currentYear}</p>
+            <img src={socialpendo.src} alt="Joto Logo" className="h-24 w-auto mb-2" />
+            <p className="text-sm text-gray-500">&copy; SocialPendo {currentYear}</p>
             <p className="text-sm text-gray-500">
-                from <span className="font-semibold text-gray-400">Joto Matchmaking Group</span>
+                from <span className="font-semibold text-gray-400">SocialPendoGroup</span>
             </p>
         </div>
 
