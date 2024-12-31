@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "name": "Jane Smith",
+    "profilePicture": "https://randomuser.me/api/portraits/women/1.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hey! How are you?", "timestamp": "12:30 PM" },
+      { "sender": "Jane Smith", "message": "I'm good! How about you?", "timestamp": "12:32 PM" },
+      { "sender": "You", "message": "I'm doing well, thanks!", "timestamp": "12:33 PM" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Emily Johnson",
+    "profilePicture": "https://randomuser.me/api/portraits/women/2.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hey Emily, what's up?", "timestamp": "1:00 PM" },
+      { "sender": "Emily Johnson", "message": "Just finished work. What about you?", "timestamp": "1:02 PM" },
+      { "sender": "You", "message": "Same here, relaxing now.", "timestamp": "1:03 PM" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Sophia Williams",
+    "profilePicture": "https://randomuser.me/api/portraits/women/3.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hi Sophia, have you seen the new movie?", "timestamp": "2:00 PM" },
+      { "sender": "Sophia Williams", "message": "Yes, I saw it last night! It was amazing.", "timestamp": "2:05 PM" },
+      { "sender": "You", "message": "I need to watch it! What's it called?", "timestamp": "2:06 PM" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Olivia Brown",
+    "profilePicture": "https://randomuser.me/api/portraits/women/4.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hey Olivia, how's everything?", "timestamp": "3:00 PM" },
+      { "sender": "Olivia Brown", "message": "All good! Just got back from a trip.", "timestamp": "3:05 PM" },
+      { "sender": "You", "message": "That sounds exciting! Where did you go?", "timestamp": "3:06 PM" }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Ava Miller",
+    "profilePicture": "https://randomuser.me/api/portraits/women/5.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hey Ava, what are you up to?", "timestamp": "4:00 PM" },
+      { "sender": "Ava Miller", "message": "Just finished work, now catching up on some reading.", "timestamp": "4:05 PM" },
+      { "sender": "You", "message": "Nice! What book are you reading?", "timestamp": "4:06 PM" }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Mia Davis",
+    "profilePicture": "https://randomuser.me/api/portraits/women/6.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hi Mia, any plans for the weekend?", "timestamp": "5:00 PM" },
+      { "sender": "Mia Davis", "message": "Yes, I'm going to a concert! What about you?", "timestamp": "5:05 PM" },
+      { "sender": "You", "message": "That sounds fun! I'll be catching up on some movies.", "timestamp": "5:06 PM" }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Charlotte Scott",
+    "profilePicture": "https://randomuser.me/api/portraits/women/7.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hey Charlotte, how's your day going?", "timestamp": "6:00 PM" },
+      { "sender": "Charlotte Scott", "message": "It's going great, just having dinner.", "timestamp": "6:05 PM" },
+      { "sender": "You", "message": "Nice! What's on the menu?", "timestamp": "6:06 PM" }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Amelia Carter",
+    "profilePicture": "https://randomuser.me/api/portraits/women/8.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Amelia! What have you been up to?", "timestamp": "7:00 PM" },
+      { "sender": "Amelia Carter", "message": "Just got back from the gym, now I'm relaxing.", "timestamp": "7:05 PM" },
+      { "sender": "You", "message": "Sounds like a good day! Have you tried that new restaurant yet?", "timestamp": "7:06 PM" }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Ella Green",
+    "profilePicture": "https://randomuser.me/api/portraits/women/9.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hey Ella, I haven't heard from you in a while!", "timestamp": "8:00 PM" },
+      { "sender": "Ella Green", "message": "I know, it's been busy! Just got back from a vacation.", "timestamp": "8:05 PM" },
+      { "sender": "You", "message": "That sounds amazing! Where did you go?", "timestamp": "8:06 PM" }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Zoe Harris",
+    "profilePicture": "https://randomuser.me/api/portraits/women/10.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Zoe, how's everything?", "timestamp": "9:00 PM" },
+      { "sender": "Zoe Harris", "message": "Pretty good, just working on a new project.", "timestamp": "9:05 PM" },
+      { "sender": "You", "message": "That sounds exciting! What’s the project about?", "timestamp": "9:06 PM" }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Chloe Allen",
+    "profilePicture": "https://randomuser.me/api/portraits/women/11.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hey Chloe, long time no talk!", "timestamp": "10:00 PM" },
+      { "sender": "Chloe Allen", "message": "Yeah, it's been a while! How have you been?", "timestamp": "10:05 PM" },
+      { "sender": "You", "message": "I've been good, just staying busy. How about you?", "timestamp": "10:06 PM" }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Isabella King",
+    "profilePicture": "https://randomuser.me/api/portraits/women/12.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hi Isabella, how was your weekend?", "timestamp": "11:00 PM" },
+      { "sender": "Isabella King", "message": "It was great! Went hiking with friends.", "timestamp": "11:05 PM" },
+      { "sender": "You", "message": "That sounds awesome! Where did you go?", "timestamp": "11:06 PM" }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Lily Martinez",
+    "profilePicture": "https://randomuser.me/api/portraits/women/13.jpg",
+    "conversation": [
+      { "sender": "You", "message": "Hey Lily, how's the new job going?", "timestamp": "12:00 AM" },
+      { "sender": "Lily Martinez", "message": "It's going well, lots of work to do!", "timestamp": "12:05 AM" },
+      { "sender": "You", "message": "Glad to hear it's going well! It must be exciting.", "timestamp": "12:06 AM" }
+    ]
+  }
+]
