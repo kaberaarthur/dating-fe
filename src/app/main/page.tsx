@@ -7,6 +7,7 @@ import fire from "../../../public/fire.png";
 import sampleProfile from "../../../public/sample-profile.jpg";
 
 import Footer from "./Footer/Footer";
+import MidSection from './MidSection/MidSection';
 
 const Home: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
@@ -58,24 +59,7 @@ const Home: React.FC = () => {
 
       {/* Content Section */}
       <div className="p-6 space-y-6 bg-gray-100 text-gray-900">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tristique libero eu
-          turpis dapibus, in dictum massa cursus. Sed accumsan vehicula eros, non feugiat justo
-          hendrerit a.
-        </p>
-        <p>
-          Suspendisse potenti. Quisque accumsan nisi ut magna auctor, nec vehicula arcu feugiat.
-          Aenean efficitur nisi quis felis vehicula, et vulputate justo ultricies. Fusce
-          consectetur, augue in feugiat luctus, justo mi tempor risus, id venenatis velit ex eu
-          lorem.
-        </p>
-        {[...Array(20)].map((_, index) => (
-          <p key={index}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a elit velit.
-            Pellentesque auctor, sapien in vehicula consectetur, arcu risus scelerisque ipsum,
-            non tempus elit arcu non libero.
-          </p>
-        ))}
+        <MidSection />
       </div>
 
       {/* Footer Section */}
