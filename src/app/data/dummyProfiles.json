@@ -1,0 +1,45 @@
+[
+    {
+      "id": 1,
+      "name": "Jane Smith",
+      "age": 34,
+      "interests": ["Cooking", "Yoga", "Photography"],
+      "profilePicture": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Emily Johnson",
+      "age": 26,
+      "interests": ["Fashion", "Design", "Travel"],
+      "profilePicture": "https://randomuser.me/api/portraits/women/2.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Sophia Williams",
+      "age": 27,
+      "interests": ["Art", "Music", "Nature"],
+      "profilePicture": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Olivia Brown",
+      "age": 32,
+      "interests": ["Fitness", "Running", "Traveling"],
+      "profilePicture": "https://randomuser.me/api/portraits/women/4.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Ava Miller",
+      "age": 29,
+      "interests": ["Cooking", "Music", "Dancing"],
+      "profilePicture": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Mia Davis",
+      "age": 25,
+      "interests": ["Photography", "Reading", "Cycling"],
+      "profilePicture": "https://randomuser.me/api/portraits/women/6.jpg"
+    }
+  ]
+  

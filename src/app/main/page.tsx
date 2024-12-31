@@ -8,6 +8,10 @@ import sampleProfile from "../../../public/sample-profile.jpg";
 
 import Footer from "./Footer/Footer";
 import MidSection from './MidSection/MidSection';
+import Likes from './Likes/Likes';
+
+// Dummy Profiles
+import dummyProfiles from "../../app/data/dummyProfiles.json";
 
 const Home: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
@@ -60,6 +64,7 @@ const Home: React.FC = () => {
       {/* Content Section */}
       <div className="p-6 space-y-6 bg-gray-100 text-gray-900">
         <MidSection />
+        <Likes profiles={dummyProfiles} />
       </div>
 
       {/* Footer Section */}
