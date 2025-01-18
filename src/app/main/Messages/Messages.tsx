@@ -39,7 +39,7 @@ const Messages: React.FC<MessagesProps> = ({ messageList }) => {
               <img
                 src={person.profilePicture}
                 alt={person.name}
-                className="w-12 h-12 rounded-full object-cover"
+                className="w-12 h-12 rounded-sm object-cover"
               />
               <span className="ml-4">{person.name}</span>
             </li>
