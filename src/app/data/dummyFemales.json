@@ -1,0 +1,72 @@
+[
+    {
+      "id": 1,
+      "name": "Chelsea",
+      "age": 32,
+      "location": "Vancouver, Washington, United States",
+      "matchPercentage": 66,
+      "profileImage": "model.png",
+      "bio": "Hustling on my animation portfolio, trying to break into the industry =)",
+      "reason": "Long term Relationship",
+      "interests": ["Animation", "Art", "Photography"],
+      "gender": "Female",
+      "county": "Clark",
+      "town": "Vancouver",
+      "active": 1,
+      "details": [
+        "Woman | Straight, Demisexual | Monogamous (Single)",
+        "She/Her",
+        "5 ft 3 in | Thin",
+        "Politically liberal | English",
+        "Graduate degree (AAU) | Freelance worker | Animator (Freelance)",
+        "Agnosticism | Gemini"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Diana",
+      "age": 29,
+      "location": "Portland, Oregon, United States",
+      "matchPercentage": 72,
+      "profileImage": "model2.jpg",
+      "bio": "Avid hiker and coder, currently working on my next startup idea.",
+      "reason": "Short term Relationship",
+      "interests": ["Hiking", "Programming", "Startups"],
+      "gender": "Female",
+      "county": "Multnomah",
+      "town": "Portland",
+      "active": 1,
+      "details": [
+        "Man | Straight | Single",
+        "He/Him",
+        "5 ft 10 in | Athletic",
+        "Politically moderate | English",
+        "Bachelor's degree (OSU) | Tech entrepreneur",
+        "Agnosticism | Leo"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Maya",
+      "age": 27,
+      "location": "Seattle, Washington, United States",
+      "matchPercentage": 88,
+      "profileImage": "model3.png",
+      "bio": "Coffee enthusiast and bookworm. Love exploring local bookstores.",
+      "reason": "Long term Relationship",
+      "interests": ["Books", "Coffee", "Travel"],
+      "gender": "Female",
+      "county": "King",
+      "town": "Seattle",
+      "active": 1,
+      "details": [
+        "Woman | Straight | Single",
+        "She/Her",
+        "5 ft 6 in | Average",
+        "Politically progressive | English, Spanish",
+        "Master's degree (UW) | Librarian",
+        "Spiritual | Pisces"
+      ]
+    }
+  ]
+  

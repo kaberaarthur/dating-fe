@@ -21,7 +21,7 @@ import dummyProfiles from "../../app/data/dummyProfiles.json";
 import dummyMessageList from "../../app/data/dummyMessageList.json";
 
 const Home: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [activeLink, setActiveLink] = useState<string>("discover"); // Default active link is "discover"
 
   // Function to handle link click and set active component
