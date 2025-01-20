@@ -17,7 +17,18 @@ import Password from "../../components/Password";
 import { BackwardIcon, CalendarDaysIcon, EnvelopeIcon, UserIcon, CubeIcon, PhoneIcon, CheckBadgeIcon, EyeDropperIcon, ListBulletIcon, KeyIcon } from '@heroicons/react/24/solid'
 import { MapPinIcon } from "@heroicons/react/16/solid";
 
+// Redux
+import { RootState } from "../../app/Redux/Store"; 
+
 const EmailPage: React.FC = () => {
+  const user = useSelector((state: RootState) => state.user);
+
+  if(user) {
+    // A user already exists
+    // Redirect to main
+    window.location.href = "/main";
+  }
+
   // Use `useSelector` to get the `currentStep` from the Redux store
   const currentStep = useSelector((state: any) => state.step.currentStep);
 

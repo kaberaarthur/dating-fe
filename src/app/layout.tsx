@@ -1,25 +1,14 @@
 "use client";
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Store, { persistor } from "../app/Redux/Store"; // Import persistor
+import Store, { persistor } from "../app/Redux/Store";
 import React from "react";
-import { useSelector, Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react"; // Import PersistGate
-import { RootState } from "../app/Redux/Store";
-
-// Loading Icon
-import { TailSpin } from 'react-loading-icons'
-
-const DebugRedux: React.FC = () => {
-  const user = useSelector((state: RootState) => state.user);
-  return (
-    <div>
-      <h2>Redux Debug Info:</h2>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-    </div>
-  );
-};
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { BrowserRouter } from "react-router-dom";
+import { TailSpin } from "react-loading-icons";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,23 +27,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="antialiased Panchang" style={{ fontFamily: 'ClashDisplay' }}>
+      <body
+        className="antialiased Panchang"
+        style={{ fontFamily: "ClashDisplay" }}
+      >
         <Provider store={Store}>
-          <PersistGate loading={
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-              }}
-            >
-              <TailSpin /> 
-            </div>
-          } persistor={persistor}
+          <PersistGate
+            loading={
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100vh",
+                }}
+              >
+                <TailSpin />
+              </div>
+            }
+            persistor={persistor}
           >
-            {/*<h1 className="py-4">This is the Outer Wrapper</h1>
-            <DebugRedux />*/}
-            {children}
+            <BrowserRouter>
+              {children}
+            </BrowserRouter>
           </PersistGate>
         </Provider>
       </body>

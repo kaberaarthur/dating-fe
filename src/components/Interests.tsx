@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../app/Redux/Store"; // Assuming the store is set up correctly
 import { setUserDetails } from "../app/Redux/Reducers/userSlice"; // Action to set user details (including interests)
+import { useNavigate } from "react-router-dom";
 
 import config from "../app/data/config.json";
 
@@ -24,6 +25,7 @@ interface UserProfileResponse {
 
 
 const Interests: React.FC = () => {
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
@@ -122,6 +124,8 @@ const Interests: React.FC = () => {
   
       console.log("User created successfully:", data);
 
+      dispatch(setUserDetails({ id: data.user.id })); // Dispatch to Redux
+
       // Proceed to Create the User Profile
       createUserProfile(data);
 
@@ -173,6 +177,8 @@ const Interests: React.FC = () => {
 
       // Handle successful response
       // Example: Redirect to another page or display success message
+      window.location.href = "/main";
+
 
     } catch (error) {
       console.error("Unexpected error:", error);

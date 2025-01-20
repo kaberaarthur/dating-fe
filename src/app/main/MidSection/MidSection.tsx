@@ -66,23 +66,25 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       </button>
     </div>
     {/* Interaction Buttons */}
-    <div className="flex space-x-4 mt-4 text-xl">
+    <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 text-xl justify-center">
       <button 
         onClick={() => nextProfile('Pass')}
-        className="flex items-center space-x-2 border border-gray-700 text-gray-700 font-medium py-2 px-6 rounded-full hover:bg-gray-100">
+        className="flex items-center justify-center space-x-2 border border-gray-700 text-gray-700 font-medium py-2 px-6 rounded-full hover:bg-gray-100"
+      >
         <XMarkIcon className="w-5 h-5" />
         <span>Pass</span>
       </button>
       <button 
         onClick={() => nextProfile('Like')}
-        className="flex items-center space-x-2 bg-pink-500 text-white font-medium py-2 px-6 rounded-full hover:bg-pink-600"
+        className="flex items-center justify-center space-x-2 bg-pink-500 text-white font-medium py-2 px-6 rounded-full hover:bg-pink-600"
       >
         <HeartIcon className="w-5 h-5" />
         <span>Like</span>
       </button>
       <button 
         onClick={() => nextProfile('Superlike')}
-        className="flex items-center space-x-2 bg-[#8207D1] text-white font-medium py-2 px-6 rounded-full hover:bg-[#782ea7]">
+        className="flex items-center justify-center space-x-2 bg-[#8207D1] text-white font-medium py-2 px-6 rounded-full hover:bg-[#782ea7]"
+      >
         <img
           src={cupidarrow.src}
           alt="Cupid Arrow"
@@ -91,6 +93,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <span>Superlike</span>
       </button>
     </div>
+    {/* Interaction Buttons */}
     <p className="text-gray-900 font-medium text-md mt-2">
       If you like each other, we’ll let you know!
     </p>
