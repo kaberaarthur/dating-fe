@@ -51,16 +51,49 @@ const Login: React.FC = () => {
           if (!response.ok) {
             const errorData = await response.json();
             console.error("Error creating user profile:", errorData);
+            setError("An Error Occurred");
             return;
           }
     
           const result = await response.json();
-          console.log("User profile created successfully:", result);
+          console.log("User logged in successfully:", result);
+
+          // Store Tokens
+          localStorage.setItem("accessToken", result.accessToken);
+          localStorage.setItem("refreshToken", result.refreshToken);
+
+          getUserProfile(result.accessToken, result.user_id);
+
+          console.log(result.accessToken);
         } catch (error) {
             console.error("Unexpected error occured:", error);
         }
     }
   };
+
+  const getUserProfile = async (accessToken: string, user_id: number) => {
+    try{
+        const response = await fetch(`${config.baseUrl}/api/user-profiles/${user_id}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${accessToken}`
+            }
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error fetching user profile:", errorData);
+            return;
+          }
+          
+          const result = await response.json();
+          dispatch(setUserDetails(result)); // Dispatch to Redux
+    }catch (error) {
+        console.error("Unexpected error occured:", error);
+        setError("Unexpected error occured");
+    }
+  }
 
   return (
     <div className="flex items-center justify-center bg-gray-100 min-h-screen">

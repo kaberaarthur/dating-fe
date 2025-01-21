@@ -124,8 +124,6 @@ const Interests: React.FC = () => {
   
       console.log("User created successfully:", data);
 
-      dispatch(setUserDetails({ id: data.user.id })); // Dispatch to Redux
-
       // Proceed to Create the User Profile
       createUserProfile(data);
 
@@ -174,6 +172,8 @@ const Interests: React.FC = () => {
 
       const result = await response.json();
       console.log("User profile created successfully:", result);
+
+      dispatch(setUserDetails(result)); // Dispatch to Redux
 
       // Handle successful response
       // Example: Redirect to another page or display success message
