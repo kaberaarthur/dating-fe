@@ -10,6 +10,7 @@ import { XMarkIcon, HeartIcon } from "@heroicons/react/24/solid";
 import dummyFemales from "../../../app/data/dummyFemales.json";
 
 type ProfileHeaderProps = {
+  id: number;
   name: string;
   location: string;
   age: number;
@@ -31,6 +32,7 @@ type DetailsProps = {
 
 // Profile Header Component
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
+  id,
   name,
   location,
   age,
@@ -42,7 +44,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     <div className="flex items-center w-full justify-between mb-4">
       {/* Name and Location */}
       <div>
-        <h1 className="text-xl font-bold">{name}</h1>
+        <h1 className="text-xl font-bold">{name + " " + id}</h1>
         <p className="text-gray-900 text-sm">
           {age} • {location}
         </p>
@@ -212,6 +214,7 @@ const MidSection: React.FC = () => {
     <div className="space-y-8 mt-6">
       {/* Profile Header */}
       <ProfileHeader
+        id = {profile.id}
         name={profile.name}
         location={profile.location}
         age={profile.age}

@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import config from "../../data/config.json";
+
 
 interface Profile {
   id: number;
@@ -13,6 +15,38 @@ interface LikesProps {
 }
 
 const Likes: React.FC<LikesProps> = ({ profiles }) => {
+  useEffect(() => {
+    const fetchLikes = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        console.error("Access token is missing.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${config.baseUrl}/api/matching/mylikes`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Likes data:", data);
+      } catch (error) {
+        console.error("Error fetching likes:", error);
+      }
+    };
+
+    fetchLikes();
+  }, []);
+
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
       {profiles.map((profile) => (

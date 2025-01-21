@@ -10,6 +10,7 @@ import Footer from "./Footer/Footer";
 import MidSection from './MidSection/MidSection';
 import Likes from './Likes/Likes';
 import Messages from './Messages/Messages';
+import { setUserDetails } from "../../app/Redux/Reducers/userSlice";
 
 // Admin Pages
 import Users from './Users/Users';
@@ -23,7 +24,10 @@ import dummyMessageList from "../../app/data/dummyMessageList.json";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/Redux/Store"; 
 
+import Link from "next/link";
+
 const Home: React.FC = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
   if(!user.id) {
     // A user already exists
@@ -40,6 +44,43 @@ const Home: React.FC = () => {
     setActiveLink(link);
     setIsMenuOpen(false); // Close menu after selecting a link
   };
+
+  const handleLogout = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+  
+    if (!accessToken) {
+      console.error("No access token found in localStorage.");
+      return;
+    }
+  
+    try {
+      const response = await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ token: accessToken }),
+      });
+  
+      if (response.ok) {
+        // Logout successful, remove tokens from localStorage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
+        dispatch(setUserDetails()); // Dispatch to Redux
+  
+        console.log("Logout successful");
+        // Optionally redirect or update the UI
+
+      } else {
+        console.error("Failed to logout:", await response.json());
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
+    }
+  };
+  
 
   return (
     <div>
@@ -114,11 +155,23 @@ const Home: React.FC = () => {
               <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
             </button>
 
-            <img
-              src={sampleProfile.src}
-              alt="Profile"
-              className="h-10 w-10 rounded-full cursor-pointer"
-            />
+            <Link href={`/profile/${user.id}`}>
+              <div className="flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded">
+                <img
+                  src={sampleProfile.src} // Use a fallback image if `profilePicture` is missing
+                  alt="Profile"
+                  className="h-10 w-10 rounded-full"
+                />
+                <p className="px-2 text-white font-medium">{user.name + " " + user.id}</p>
+              </div>
+            </Link>
+
+            <button
+              className="bg-purple-800 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-purple-900 flex items-center space-x-2"
+              onClick={handleLogout}
+            >
+              <span>Logout</span>
+            </button>
           </div>
 
           {/* Mobile Hamburger Menu Button */}
@@ -203,13 +256,22 @@ const Home: React.FC = () => {
             <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
           </button>
 
-          <div className="flex justify-center">
-            <img
-              src={sampleProfile.src}
-              alt="Profile"
-              className="h-10 w-10 rounded-full cursor-pointer"
-            />
-          </div>
+          <Link href={`/profile/${user.id}`}>
+              <div className="flex items-center cursor-pointer hover:bg-gray-100 px-2 rounded py-4">
+                <img
+                  src={sampleProfile.src} // Use a fallback image if `profilePicture` is missing
+                  alt="Profile"
+                  className="h-10 w-10 rounded-full"
+                />
+                <p className="px-2 text-white font-medium">{user.name + " " + user.id}</p>
+              </div>
+            </Link>
+            <button
+              className="bg-purple-800 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-purple-900 w-full flex items-center space-x-2 justify-center"
+              onClick={handleLogout}
+            >
+              <span>Logout</span>
+            </button>
         </div>
       </div>
 
