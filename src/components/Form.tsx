@@ -6,6 +6,8 @@ import { incrementStep } from "../app/Redux/Reducers/stepSlice";
 import { RootState } from "../app/Redux/Store";
 import { setUserDetails } from "../app/Redux/Reducers/userSlice";
 
+import Link from "next/link";
+
 const Form: React.FC = () => {
   const currentStep = useSelector((state: any) => state.step.currentStep);
   const user = useSelector((state: RootState) => state.user);
@@ -50,7 +52,17 @@ const Form: React.FC = () => {
         <div className="flex items-center gap-2">
           <input type="checkbox" id="promotions" className="w-4 h-4" />
           <label htmlFor="promotions" className="text-gray-600">
-            I don‘t want to miss discounts & promotional emails from OkCupid
+            I don‘t want to miss discounts & promotional emails from SocialPendo
+          </label>
+        </div>
+        <div className="flex items-center gap-2">
+          <label htmlFor="promotions" className="text-gray-600">
+            Already signed up? 
+              <span className="text-purple-800 underline">
+                <Link href="/login">
+                  Login
+                </Link>
+              </span>
           </label>
         </div>
         <button

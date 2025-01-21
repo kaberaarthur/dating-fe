@@ -25,10 +25,10 @@ import { RootState } from "../../app/Redux/Store";
 
 const Home: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
-  if(!user) {
+  if(!user.id) {
     // A user already exists
     // Redirect to main
-    window.location.href = "/main";
+    window.location.href = "/login";
   }
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -45,7 +45,7 @@ const Home: React.FC = () => {
     <div>
       {/* Navbar */}
       <div className="sticky top-0 z-50 bg-gray-900 shadow-md">
-        <div className="max-w-screen-lg mx-auto flex items-center justify-between px-6 py-4">
+        <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-4">
           {/* Left Section */}
           <div className="flex items-center space-x-6">
             <img src={socialpendo.src} alt="Social Pendo Logo" className="h-10 w-auto" />

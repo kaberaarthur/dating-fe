@@ -23,9 +23,8 @@ import { RootState } from "../../app/Redux/Store";
 const EmailPage: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
 
-  if(user) {
-    // A user already exists
-    // Redirect to main
+  if(user.id) {
+    // If a user already exists, redirect user to home page
     window.location.href = "/main";
   }
 
