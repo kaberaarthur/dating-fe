@@ -151,7 +151,7 @@ const Home: React.FC = () => {
             <button
               className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 flex items-center space-x-2"
             >
-              <span>Boost</span>
+              <span>Buy Superlikes</span>
               <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
             </button>
 
@@ -252,7 +252,7 @@ const Home: React.FC = () => {
           <button
             className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 w-full flex items-center space-x-2 justify-center"
           >
-            <span>Boost</span>
+            <span>Buy Superlikes</span>
             <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
           </button>
 
@@ -278,7 +278,7 @@ const Home: React.FC = () => {
       {/* Content Section */}
       <div className="p-6 space-y-6 bg-gray-100 text-gray-900">
         {activeLink === "discover" && <MidSection />}
-        {activeLink === "likes" && <Likes profiles={dummyProfiles} />}
+        {activeLink === "likes" && <Likes />}
         {activeLink === "messages" && <Messages messageList={dummyMessageList} />}
 
         {/* Admin Pages */}
