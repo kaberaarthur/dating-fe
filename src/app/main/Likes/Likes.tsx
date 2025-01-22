@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import config from "../../data/config.json";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../../app/Redux/Store";
 
 // Interface for the Like data
 interface Like {
   id: number;
+  user_id: number;
   compatibility_score: string;
   is_liked: number;
   is_mutual: number;
@@ -32,50 +35,112 @@ function calculateAge(dateOfBirth: string): number {
 }
 
 const Likes: React.FC = () => {
-  const [likesData, setLikesData] = useState<Like[]>([]); // State to store likes data
+  const accessToken = localStorage.getItem("accessToken");
+  // User stored in the state
+  const user = useSelector((state: RootState) => state.user);
+
+  // State to store likes data
+  const [likesData, setLikesData] = useState<Like[]>([]); 
+
+  // Get Likes Data
+  const fetchLikes = async () => {
+
+    if (!accessToken) {
+      console.error("Access token is missing.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${config.baseUrl}/api/matching/mylikes`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Likes data:", data);
+
+      // Calculate age for each like
+      const likesWithAge = data.map((like: Like) => {
+        const age = calculateAge(like.date_of_birth);  // Calculate age using the helper function
+        return { ...like, age }; // Add calculated age to the like data
+      });
+
+      setLikesData(likesWithAge); // Update state with the fetched data and calculated age
+    } catch (error) {
+      console.error("Error fetching likes:", error);
+    }
+  };
+
+
+  // Sender ID will be in the Access Token
+  const sendEmptyMessage = async (receiver_id: number) => {
+    const message = "Hi, we just got matched!"
+    console.log("Sender: ", user);
+    console.log("Receiver: ", receiver_id);
+
+    try{
+      const response = await fetch(`${config.baseUrl}/api/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ message: message, receiver_id: receiver_id }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log("Message Send Response: ", data);
+    } catch (error) {
+      console.error('Error during patch request:', error);
+    }
+  }
 
   useEffect(() => {
-    const fetchLikes = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-
-      if (!accessToken) {
-        console.error("Access token is missing.");
-        return;
-      }
-
-      try {
-        const response = await fetch(`${config.baseUrl}/api/matching/mylikes`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} - ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log("Likes data:", data);
-
-        // Calculate age for each like
-        const likesWithAge = data.map((like: Like) => {
-          const age = calculateAge(like.date_of_birth);  // Calculate age using the helper function
-          return { ...like, age }; // Add calculated age to the like data
-        });
-
-        setLikesData(likesWithAge); // Update state with the fetched data and calculated age
-      } catch (error) {
-        console.error("Error fetching likes:", error);
-      }
-    };
-
     fetchLikes();
   }, []); // Empty dependency array means this runs once after the component mounts
 
-  const handleMatchUser = (userName: string) => {
-    console.log(`Matched with user: ${userName}`);
+  const handleMatchUser = async (user_id: number, match_id: number) => {
+    const url = `${config.baseUrl}/api/matching/${match_id}`;
+    const accessToken = localStorage.getItem("accessToken");
+  
+    try {
+      const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ is_mutual: 1 }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('Patch request successful:', data);
+      console.log(`Matched with user: ${user_id} for the match ID - ${match_id}`);
+
+      // Fetch Likes Again
+      fetchLikes();
+
+      // Send Empty Message
+      sendEmptyMessage(user_id);
+    } catch (error) {
+      console.error('Error during patch request:', error);
+    }
   };
+  
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4">
@@ -118,7 +183,7 @@ const Likes: React.FC = () => {
                     </div>
                     <div className="mt-4">
                       <button
-                        onClick={() => handleMatchUser(like.user_name)}
+                        onClick={() => handleMatchUser(like.user_id, like.id)}
                         className="w-full bg-purple-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-900 text-center"
                       >
                         Match With {like.user_name}
