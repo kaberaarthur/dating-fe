@@ -3,12 +3,12 @@ import config from "../../data/config.json";
 
 // Interface for the Like data
 interface Like {
-  match_id: number;
+  id: number;
   compatibility_score: string;
   is_liked: number;
   is_mutual: number;
   matched_date: string;
-  matched_user_name: string;
+  user_name: string;
   date_of_birth: string;
   reason: string;
   interests: string;  // interests is a string containing a JSON array
@@ -78,60 +78,59 @@ const Likes: React.FC = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto min-h-80 lg:min-h-screen py-16 items-center justify-center">
-      {/* Check if there are no likes */}
-      {likesData.length === 0 ? (
-        <div className="flex flex-col items-center justify-center text-center">
-          <img
-            src={"/moyo2.gif"} // Use the profile_picture field from likes data
-            alt={"Love Heartbeat Image"}
-            className="w-64 h-64 rounded-sm object-cover"
-          />
-          <p className="text-lg font-semibold mb-4">You currently have ZERO likes. Buy Socialpendo Premium to get recommended more.</p>
-          <button className="bg-purple-800 text-white font-semibold py-2 px-6 rounded-lg hover:bg-purple-900">
-            Get Premium Social Pendo
-          </button>
-        </div>
-      ) : (
-        // Display likes if there are any
-        likesData.map((like) => {
-          // Parse the stringified JSON array into an actual array
-          const interestsArray = like.interests ? JSON.parse(like.interests) : [];
-
-          return (
-            <div
-              key={like.match_id}
-              className="flex items-center p-4 border rounded-lg shadow-sm bg-white"
-            >
-              {/* Profile Picture */}
+    <div className="min-h-screen w-full flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          {likesData.length === 0 ? (
+            <div className="md:col-span-2 flex flex-col items-center justify-center text-center p-8">
               <img
-                src={like.profile_picture} // Use the profile_picture field from likes data
-                alt={like.matched_user_name}
-                className="w-24 h-24 rounded-sm object-cover"
+                src="/moyo2.gif"
+                alt="Love Heartbeat Image"
+                className="w-64 h-64 rounded-sm object-cover"
               />
-              {/* Profile Info and Match User Button */}
-              <div className="ml-4 flex flex-col w-full">
-                <div className="flex flex-col">
-                  <h2 className="font-bold text-lg">{like.matched_user_name}</h2>
-                  <p className="text-sm text-gray-600">
-                    {like.age} years old • {interestsArray.join(', ')} {/* Display age and interests */}
-                  </p>
-                </div>
-
-                {/* Match User Button */}
-                <div className="mt-4">
-                  <button
-                    onClick={() => handleMatchUser(like.matched_user_name)}
-                    className="w-full bg-purple-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-900 text-center"
-                  >
-                    Match With {like.matched_user_name}
-                  </button>
-                </div>
-              </div>
+              <p className="text-lg font-semibold mt-6 mb-4">
+                You currently have ZERO likes. Buy Socialpendo Premium to get recommended more.
+              </p>
+              <button className="bg-purple-800 text-white font-semibold py-2 px-6 rounded-lg hover:bg-purple-900">
+                Get Premium Social Pendo
+              </button>
             </div>
-          );
-        })
-      )}
+          ) : (
+            likesData.map((like) => {
+              const interestsArray = like.interests ? JSON.parse(like.interests) : [];
+              
+              return (
+                <div
+                  key={like.id}
+                  className="flex items-start p-4 border rounded-lg shadow-sm bg-white"
+                >
+                  <img
+                    src={like.profile_picture}
+                    alt={like.user_name}
+                    className="w-24 h-24 rounded-sm object-cover flex-shrink-0"
+                  />
+                  <div className="ml-4 flex flex-col flex-grow">
+                    <div className="flex flex-col">
+                      <h2 className="font-bold text-lg">{like.user_name}</h2>
+                      <p className="text-sm text-gray-600">
+                        {like.age} years old • {interestsArray.join(', ')}
+                      </p>
+                    </div>
+                    <div className="mt-4">
+                      <button
+                        onClick={() => handleMatchUser(like.user_name)}
+                        className="w-full bg-purple-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-900 text-center"
+                      >
+                        Match With {like.user_name}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
     </div>
   );
 };
