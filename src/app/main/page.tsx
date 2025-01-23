@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal/Modal";
 import joto from "../../../public/joto.png";
 import socialpendo from "../../../public/socialpendo.png";
@@ -24,11 +24,14 @@ import dummyMessageList from "../../app/data/dummyMessageList.json";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/Redux/Store"; 
 
+import config from "../data/config.json";
+
 import Link from "next/link";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
+  const accessToken = localStorage.getItem("accessToken");
   if(!user.id) {
     // A user already exists
     // Redirect to main
@@ -39,6 +42,42 @@ const Home: React.FC = () => {
   const [activeLink, setActiveLink] = useState<string>("discover"); // Default active link is "discover"
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false); // State for managing hamburger menu
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Messages
+  const [messages, setMessages] = useState([]);
+
+  // Fetch Messages
+  useEffect(() => {
+    const fetchMessages = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${config.baseUrl}/api/messages`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`, // Include token
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            setMessages(data); // Save the messages in state
+        } catch (err: unknown) {
+            console.error("Error fetching likes:", error);
+            setError("An error occurred when fetching messages"); // Set error message
+        } finally {
+            setLoading(false); // Stop loading state
+        }
+      };
+
+      fetchMessages();
+  }, [accessToken]);
+
   // Function to handle link click and set active component
   const handleLinkClick = (link: string) => {
     setActiveLink(link);
@@ -46,7 +85,7 @@ const Home: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    const accessToken = localStorage.getItem("accessToken");
+    
   
     if (!accessToken) {
       console.error("No access token found in localStorage.");
@@ -279,7 +318,7 @@ const Home: React.FC = () => {
       <div className="p-6 space-y-6 bg-gray-100 text-gray-900">
         {activeLink === "discover" && <MidSection />}
         {activeLink === "likes" && <Likes />}
-        {activeLink === "messages" && <Messages messageList={dummyMessageList} />}
+        {activeLink === "messages" && <Messages messageList={messages} />}
 
         {/* Admin Pages */}
         {activeLink === "users" && <Users />}
