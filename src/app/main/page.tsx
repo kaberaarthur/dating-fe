@@ -11,14 +11,15 @@ import MidSection from './MidSection/MidSection';
 import Likes from './Likes/Likes';
 import Messages from './Messages/Messages';
 import { setUserDetails } from "../../app/Redux/Reducers/userSlice";
+import { setActiveLink } from "../../app/Redux/Reducers/activeLinkSlice";
 
 // Admin Pages
 import Users from './Users/Users';
 //import Messages from './Messages/Messages';
 
 // Dummy Profiles
-import dummyProfiles from "../../app/data/dummyProfiles.json";
-import dummyMessageList from "../../app/data/dummyMessageList.json";
+// import dummyProfiles from "../../app/data/dummyProfiles.json";
+// import dummyMessageList from "../../app/data/dummyMessageList.json";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -30,6 +31,7 @@ import Link from "next/link";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
+  const activeLink = useSelector((state: RootState) => state.activeLink.activeLink);
   const user = useSelector((state: RootState) => state.user);
   const accessToken = localStorage.getItem("accessToken");
   if(!user.id) {
@@ -39,7 +41,7 @@ const Home: React.FC = () => {
   }
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [activeLink, setActiveLink] = useState<string>("discover"); // Default active link is "discover"
+  // const [activeLink, setActiveLink] = useState<string>("discover"); // Default active link is "discover"
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false); // State for managing hamburger menu
 
   const [loading, setLoading] = useState(true);
@@ -49,38 +51,40 @@ const Home: React.FC = () => {
   const [messages, setMessages] = useState([]);
 
   // Fetch Messages
-  useEffect(() => {
-    const fetchMessages = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch(`${config.baseUrl}/api/messages`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`, // Include token
-                },
-            });
+  const fetchMessages = async () => {
+    setLoading(true);
+    try {
+        const response = await fetch(`${config.baseUrl}/api/messages`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`, // Include token
+            },
+        });
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            setMessages(data); // Save the messages in state
-        } catch (err: unknown) {
-            console.error("Error fetching likes:", error);
-            setError("An error occurred when fetching messages"); // Set error message
-        } finally {
-            setLoading(false); // Stop loading state
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
-      };
 
+        const data = await response.json();
+        setMessages(data); // Save the messages in state
+
+        console.log("New Messages: ", data);
+    } catch (err: unknown) {
+        console.error("Error fetching likes:", error);
+        setError("An error occurred when fetching messages"); // Set error message
+    } finally {
+        setLoading(false); // Stop loading state
+    }
+  };
+
+  useEffect(() => {
       fetchMessages();
   }, [accessToken]);
 
   // Function to handle link click and set active component
   const handleLinkClick = (link: string) => {
-    setActiveLink(link);
+    dispatch(setActiveLink(link));
     setIsMenuOpen(false); // Close menu after selecting a link
   };
 
@@ -318,7 +322,7 @@ const Home: React.FC = () => {
       <div className="p-6 space-y-6 bg-gray-100 text-gray-900">
         {activeLink === "discover" && <MidSection />}
         {activeLink === "likes" && <Likes />}
-        {activeLink === "messages" && <Messages messageList={messages} />}
+        {activeLink === "messages" && <Messages />}
 
         {/* Admin Pages */}
         {activeLink === "users" && <Users />}
