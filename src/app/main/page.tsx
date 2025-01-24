@@ -10,6 +10,9 @@ import Footer from "./Footer/Footer";
 import MidSection from './MidSection/MidSection';
 import Likes from './Likes/Likes';
 import Messages from './Messages/Messages';
+import Premium from './Premium/Premium';
+
+
 import { setUserDetails } from "../../app/Redux/Reducers/userSlice";
 import { setActiveLink } from "../../app/Redux/Reducers/activeLinkSlice";
 
@@ -186,7 +189,7 @@ const Home: React.FC = () => {
           <div className="hidden md:flex items-center space-x-6">
             <button
               className="bg-[#8207D1] text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-[#6a05a7]"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => handleLinkClick("premium")}
             >
               Get Premium
             </button>
@@ -287,7 +290,7 @@ const Home: React.FC = () => {
         <div className="mt-4 space-y-4">
           <button
             className="bg-[#8207D1] text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-[#6a05a7] w-full"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => handleLinkClick("premium")}
           >
             Get Premium
           </button>
@@ -323,6 +326,7 @@ const Home: React.FC = () => {
         {activeLink === "discover" && <MidSection />}
         {activeLink === "likes" && <Likes />}
         {activeLink === "messages" && <Messages />}
+        {activeLink === "premium" && <Premium />}
 
         {/* Admin Pages */}
         {activeLink === "users" && <Users />}
