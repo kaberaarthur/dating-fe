@@ -37,9 +37,10 @@ const Home: React.FC = () => {
   const activeLink = useSelector((state: RootState) => state.activeLink.activeLink);
   const user = useSelector((state: RootState) => state.user);
   const accessToken = localStorage.getItem("accessToken");
+
+  // console.log("Current User: ", user.user_id);
+
   if(!user.id) {
-    // A user already exists
-    // Redirect to main
     window.location.href = "/login";
   }
 
@@ -52,6 +53,51 @@ const Home: React.FC = () => {
 
   // Messages
   const [messages, setMessages] = useState([]);
+
+  // Check if Client has paid Premium Subscription
+  const [subscriptionPaid, setSubscriptionPaid] = useState<boolean>(false); // State for managing hamburger menu
+
+  useEffect(() => {
+    const checkSubscription = async () => {
+      if (!accessToken) {
+        console.error("No access token found.");
+        return;
+      }
+
+      if (!user.id) {
+        window.location.href = "/login";
+        return;
+      } else {
+        console.log("Current User ID: ", user.id);
+      }
+
+      try {
+        const response = await fetch(`${config.baseUrl}/api/subscriptions/check-subscription`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user_id: user.user_id}), // Assuming user_id is stored in localStorage
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to check subscription");
+        }
+
+        const data = await response.json();
+        setSubscriptionPaid(data.isPaid);
+        console.log("User has a subscription: ", data.isPaid)
+        
+      } catch (error) {
+        console.error("Error checking subscription:", error);
+        setSubscriptionPaid(false);
+      }
+    };
+
+    checkSubscription();
+  }, [accessToken]); // Runs when accessToken changes
+
 
   // Fetch Messages
   const fetchMessages = async () => {
@@ -168,38 +214,19 @@ const Home: React.FC = () => {
               >
                 Users
               </a>
-              <a
-                href="#"
-                className={`text-sm font-medium ${activeLink === "subscriptions" ? "text-violet-500" : "text-white"} hover:text-violet-500`}
-                onClick={() => handleLinkClick("subscriptions")}
-              >
-                Subscriptions
-              </a>
-              <a
-                href="#"
-                className={`text-sm font-medium ${activeLink === "superlikes" ? "text-violet-500" : "text-white"} hover:text-violet-500`}
-                onClick={() => handleLinkClick("superlikes")}
-              >
-                Superlikes
-              </a>
             </div>
           </div>
 
           {/* Right Section (hidden on mobile) */}
           <div className="hidden md:flex items-center space-x-6">
-            <button
-              className="bg-[#8207D1] text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-[#6a05a7]"
-              onClick={() => handleLinkClick("premium")}
-            >
-              Get Premium
-            </button>
-
-            <button
-              className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 flex items-center space-x-2"
-            >
-              <span>Buy Superlikes</span>
-              <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
-            </button>
+            {!subscriptionPaid && (
+              <button
+                className="bg-[#8207D1] text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-[#6a05a7]"
+                onClick={() => handleLinkClick("premium")}
+              >
+                Get Premium
+              </button>
+            )}
 
             <Link href={`/profile/${user.id}`}>
               <div className="flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded">
@@ -208,9 +235,16 @@ const Home: React.FC = () => {
                   alt="Profile"
                   className="h-10 w-10 rounded-full"
                 />
-                <p className="px-2 text-white font-medium">{user.name + " " + user.id}</p>
+                <p className="px-2 text-white font-medium">{user.name}</p>
               </div>
             </Link>
+
+            <button
+              className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 flex items-center space-x-2"
+            >
+              <span>Buy Superlikes</span>
+              <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
+            </button>
 
             <button
               className="bg-purple-800 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-purple-900 flex items-center space-x-2"
@@ -271,36 +305,17 @@ const Home: React.FC = () => {
         >
           Users
         </a>
-        <a
-          href="#"
-          className="block py-2"
-          onClick={() => handleLinkClick("subscriptions")}
-        >
-          Subscriptions
-        </a>
-        <a
-          href="#"
-          className="block py-2"
-          onClick={() => handleLinkClick("superlikes")}
-        >
-          Superlikes
-        </a>
 
         {/* Mobile buttons and profile */}
         <div className="mt-4 space-y-4">
-          <button
-            className="bg-[#8207D1] text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-[#6a05a7] w-full"
-            onClick={() => handleLinkClick("premium")}
-          >
-            Get Premium
-          </button>
-
-          <button
-            className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 w-full flex items-center space-x-2 justify-center"
-          >
-            <span>Buy Superlikes</span>
-            <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
-          </button>
+          {!subscriptionPaid && (
+            <button
+              className="bg-[#8207D1] text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-[#6a05a7] w-full"
+              onClick={() => handleLinkClick("premium")}
+            >
+              Get Premium
+            </button>
+          )}
 
           <Link href={`/profile/${user.id}`}>
               <div className="flex items-center cursor-pointer hover:bg-gray-100 px-2 rounded py-4">
@@ -309,9 +324,17 @@ const Home: React.FC = () => {
                   alt="Profile"
                   className="h-10 w-10 rounded-full"
                 />
-                <p className="px-2 text-white font-medium">{user.name + " " + user.id}</p>
+                <p className="px-2 text-white font-medium">{user.name}</p>
               </div>
             </Link>
+
+            <button
+              className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 w-full flex items-center space-x-2 justify-center"
+            >
+              <span>Buy Superlikes</span>
+              <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
+            </button>
+            
             <button
               className="bg-purple-800 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-purple-900 w-full flex items-center space-x-2 justify-center"
               onClick={handleLogout}
