@@ -11,6 +11,7 @@ import MidSection from './MidSection/MidSection';
 import Likes from './Likes/Likes';
 import Messages from './Messages/Messages';
 import Premium from './Premium/Premium';
+import Superlikes from './Superlikes/Superlikes';
 
 
 import { setUserDetails } from "../../app/Redux/Reducers/userSlice";
@@ -241,6 +242,7 @@ const Home: React.FC = () => {
 
             <button
               className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 flex items-center space-x-2"
+              onClick={() => handleLinkClick("superlikes")}
             >
               <span>Buy Superlikes</span>
               <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
@@ -330,11 +332,12 @@ const Home: React.FC = () => {
 
             <button
               className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 w-full flex items-center space-x-2 justify-center"
+              onClick={() => handleLinkClick("superlikes")}
             >
               <span>Buy Superlikes</span>
               <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
             </button>
-            
+
             <button
               className="bg-purple-800 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-purple-900 w-full flex items-center space-x-2 justify-center"
               onClick={handleLogout}
@@ -350,6 +353,7 @@ const Home: React.FC = () => {
         {activeLink === "likes" && <Likes />}
         {activeLink === "messages" && <Messages />}
         {activeLink === "premium" && <Premium />}
+        {activeLink === "superlikes" && <Superlikes />}
 
         {/* Admin Pages */}
         {activeLink === "users" && <Users />}
