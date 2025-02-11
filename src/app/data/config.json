@@ -1,4 +1,4 @@
 {
-    "baseUrl": "http://localhost:5000",
+    "baseUrl": "/backend",
     "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJrYWJlcmFAZXhhbXBsZS5jb20iLCJ1c2VyX3R5cGUiOiJhZG1pbiIsImFjdGl2ZSI6MSwiaWF0IjoxNzM3MTg2MDMwLCJleHAiOjE3ODAzODYwMzB9.Yix4ETBlh1eFIwjVE3146abJOdFMGzyNE5OX-Fadg0g"
 }  

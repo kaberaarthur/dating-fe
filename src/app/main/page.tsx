@@ -33,6 +33,11 @@ import config from "../data/config.json";
 
 import Link from "next/link";
 
+
+export const goToMessages = (dispatch: any) => {
+  dispatch(setActiveLink("messages"));
+};
+
 const Home: React.FC = () => {
   const dispatch = useDispatch();
   const activeLink = useSelector((state: RootState) => state.activeLink.activeLink);
@@ -60,6 +65,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const checkSubscription = async () => {
+      console.log(accessToken);
+
       if (!accessToken) {
         console.error("No access token found.");
         return;
@@ -137,6 +144,7 @@ const Home: React.FC = () => {
     dispatch(setActiveLink(link));
     setIsMenuOpen(false); // Close menu after selecting a link
   };
+
 
   const handleLogout = async () => {
     

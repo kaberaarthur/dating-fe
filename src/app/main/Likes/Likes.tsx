@@ -3,6 +3,8 @@ import config from "../../data/config.json";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../app/Redux/Store";
 
+import { goToMessages } from "../page"
+
 // Interface for the Like data
 interface Like {
   id: number;
@@ -39,6 +41,8 @@ const Likes: React.FC = () => {
   // User stored in the state
   const user = useSelector((state: RootState) => state.user);
 
+  const dispatch = useDispatch();
+
   // State to store likes data
   const [likesData, setLikesData] = useState<Like[]>([]); 
 
@@ -49,6 +53,8 @@ const Likes: React.FC = () => {
       console.error("Access token is missing.");
       return;
     }
+
+    console.log("Access token: ", accessToken);
 
     try {
       const response = await fetch(`${config.baseUrl}/api/matching/mylikes`, {
@@ -100,6 +106,8 @@ const Likes: React.FC = () => {
   
       const data = await response.json();
       console.log("Message Send Response: ", data);
+      goToMessages(dispatch);
+
     } catch (error) {
       console.error('Error during patch request:', error);
     }
