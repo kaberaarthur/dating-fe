@@ -12,6 +12,7 @@ import Likes from './Likes/Likes';
 import Messages from './Messages/Messages';
 import Premium from './Premium/Premium';
 import Superlikes from './Superlikes/Superlikes';
+import Profile from './Profile/Profile';
 
 
 import { setUserDetails } from "../../app/Redux/Reducers/userSlice";
@@ -237,16 +238,19 @@ const Home: React.FC = () => {
               </button>
             )}
 
-            <Link href={`/profile/${user.id}`}>
-              <div className="flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded">
-                <img
-                  src={sampleProfile.src} // Use a fallback image if `profilePicture` is missing
-                  alt="Profile"
-                  className="h-10 w-10 rounded-full"
-                />
-                <p className="px-2 text-white font-medium">{user.name}</p>
-              </div>
-            </Link>
+            {/** Profile Page */}
+            <div
+              onClick={() => handleLinkClick("profile")}
+              className="flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded"
+            >
+              <img
+                src={sampleProfile.src} // Use a fallback image if profilePicture is missing
+                alt="Profile"
+                className="h-10 w-10 rounded-full"
+              />
+              <p className="px-2 text-white font-medium">{user.name}</p>
+            </div>
+            {/** Profile Page */}
 
             <button
               className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 flex items-center space-x-2"
@@ -327,16 +331,19 @@ const Home: React.FC = () => {
             </button>
           )}
 
-          <Link href={`/profile/${user.id}`}>
-              <div className="flex items-center cursor-pointer hover:bg-gray-100 px-2 rounded py-4">
-                <img
-                  src={sampleProfile.src} // Use a fallback image if `profilePicture` is missing
-                  alt="Profile"
-                  className="h-10 w-10 rounded-full"
-                />
-                <p className="px-2 text-white font-medium">{user.name}</p>
-              </div>
-            </Link>
+          
+            <div 
+              className="flex items-center cursor-pointer hover:bg-gray-100 px-2 rounded py-4"
+              onClick={() => handleLinkClick("profile")}
+            >
+              <img
+                src={sampleProfile.src} // Use a fallback image if `profilePicture` is missing
+                alt="Profile"
+                className="h-10 w-10 rounded-full"
+              />
+              <p className="px-2 text-white font-medium">{user.name}</p>
+            </div>
+            
 
             <button
               className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 w-full flex items-center space-x-2 justify-center"
@@ -362,6 +369,7 @@ const Home: React.FC = () => {
         {activeLink === "messages" && <Messages />}
         {activeLink === "premium" && <Premium />}
         {activeLink === "superlikes" && <Superlikes />}
+        {activeLink === "profile" && <Profile />}
 
         {/* Admin Pages */}
         {activeLink === "users" && <Users />}

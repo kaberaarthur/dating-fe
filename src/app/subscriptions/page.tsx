@@ -74,12 +74,23 @@ export default function Subscriptions() {
 
   return (
     <div className="lg:px-24 p-6 bg-gray-50 min-h-screen text-gray-900">
-      <nav className="bg-white shadow-md p-4 mb-6 flex items-center gap-6">
-        <h1 className="text-xl font-semibold text-gray-700">Subscriptions</h1>
-        <a href="/mpesa-transactions" className="text-blue-500 hover:text-blue-700">
-          Transactions
-        </a>
-      </nav>
+        <nav className="bg-white shadow-md p-4 mb-6 flex items-center gap-6">
+            <h1 className="text-xl font-semibold text-gray-700">
+                <a href="/people" className="hover:text-blue-600">
+                Profiles
+                </a>
+            </h1>
+            <h1 className="text-xl font-semibold text-gray-700">
+                <a href="/mpesa-transactions" className="hover:text-blue-600">
+                Transactions
+                </a>
+            </h1>
+            <h1 className="text-xl font-semibold text-gray-700">
+                <a href="/subscriptions" className="hover:text-blue-600">
+                Subscriptions
+                </a>
+            </h1>
+        </nav>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-6">
@@ -140,7 +151,7 @@ export default function Subscriptions() {
               ))
             ) : (
               <tr>
-                <td colSpan={7} className="text-center p-4 text-gray-500">No subscriptions found.</td>
+                <td colSpan={7} className="text-center p-4 text-gray-500">Loading subscriptions...</td>
               </tr>
             )}
           </tbody>
