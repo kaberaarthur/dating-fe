@@ -34,6 +34,8 @@ import config from "../data/config.json";
 
 import Link from "next/link";
 
+import { useNavigate } from "react-router-dom";
+
 
 export const goToMessages = (dispatch: any) => {
   dispatch(setActiveLink("messages"));
@@ -44,6 +46,8 @@ const Home: React.FC = () => {
   const activeLink = useSelector((state: RootState) => state.activeLink.activeLink);
   const user = useSelector((state: RootState) => state.user);
   const accessToken = localStorage.getItem("accessToken");
+
+  const navigate = useNavigate();
 
   // console.log("Current User: ", user.user_id);
 
@@ -220,7 +224,7 @@ const Home: React.FC = () => {
               <a
                 href="#"
                 className={`text-sm font-medium ${activeLink === "users" ? "text-violet-500" : "text-white"} hover:text-violet-500`}
-                onClick={() => handleLinkClick("users")}
+                onClick={() => navigate("/people")}
               >
                 Users
               </a>
