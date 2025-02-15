@@ -4,6 +4,7 @@ import { useState, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import AdminNav from "@/components/AdminNav";
 
 // Mpesa Transaction type definition
 interface MpesaTransaction {
@@ -76,23 +77,7 @@ export default function MpesaTransactions() {
   return (
     <div className="lg:px-24 p-6 bg-gray-50 min-h-screen text-gray-900">
       {/* Navbar */}
-      <nav className="bg-white shadow-md p-4 mb-6 flex items-center gap-6">
-            <h1 className="text-xl font-semibold text-gray-700">
-                <a href="/people" className="hover:text-blue-600">
-                Profiles
-                </a>
-            </h1>
-            <h1 className="text-xl font-semibold text-gray-700">
-                <a href="/mpesa-transactions" className="hover:text-blue-600">
-                Transactions
-                </a>
-            </h1>
-            <h1 className="text-xl font-semibold text-gray-700">
-                <a href="/subscriptions" className="hover:text-blue-600">
-                Subscriptions
-                </a>
-            </h1>
-        </nav>
+      <AdminNav />
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-6">
