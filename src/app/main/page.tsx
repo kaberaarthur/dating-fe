@@ -222,11 +222,11 @@ const Home: React.FC = () => {
 
               {/* Admin Pages */}
               <a
-                href="#"
+                href="/people"
                 className={`text-sm font-medium ${activeLink === "users" ? "text-violet-500" : "text-white"} hover:text-violet-500`}
                 onClick={() => navigate("/people")}
               >
-                Users
+                Admin
               </a>
             </div>
           </div>
@@ -317,11 +317,11 @@ const Home: React.FC = () => {
 
         {/* Admin Pages */}
         <a
-          href="#"
+          href="/people"
           className="block py-2"
           onClick={() => handleLinkClick("users")}
         >
-          Users
+          Admin
         </a>
 
         {/* Mobile buttons and profile */}
