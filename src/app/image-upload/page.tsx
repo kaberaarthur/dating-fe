@@ -25,6 +25,8 @@ export default function ImageUploader() {
   const [currentImageType, setCurrentImageType] = useState<"main" | "secondary" | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
+  const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
   function convertToUsername(name: string): string {
     // Convert to lowercase and replace spaces/special characters with underscores
     return (
@@ -64,10 +66,12 @@ export default function ImageUploader() {
   ) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (!file.type.startsWith("image/")) {
-        alert("Please upload an image file");
-        return;
-      }
+      // Updated
+        if (!file.type.startsWith("image/")) {
+            setAlert({ type: "error", message: "Please upload an image file" });
+            return;
+        }
+
       const imageUrl = URL.createObjectURL(file);
       setCurrentImageType(type);
       setCurrentImageIndex(index);
@@ -152,13 +156,40 @@ export default function ImageUploader() {
     setCompletedCrop(undefined);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (processedImages.main && processedImages.secondary.every((img) => img !== null)) {
       console.log({
         mainImage: processedImages.main.file,
         secondaryImages: processedImages.secondary.map((img) => img!.file),
       });
       // Upload processedImages to your server here
+      const formData = new FormData();
+    
+        formData.append("mainImage", processedImages.main.file);
+        processedImages.secondary.forEach((img, index) => {
+        formData.append("secondaryImages", img!.file);
+        });
+
+        try {
+            const response = await fetch("http://localhost:5000/api/new-image-upload", { // Updated URL
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error("Upload failed");
+            }
+
+            const result = await response.json();
+            console.log("Upload result:", result);
+            setAlert({ type: "success", message: "Files uploaded successfully!" });
+            setTimeout(() => {
+                window.location.reload();
+              }, 2000); // 2000 milliseconds = 2 seconds
+        } catch (error) {
+            console.error("Error uploading files:", error);
+            setAlert({ type: "error", message: "Failed to upload files. Please try again." });
+        }
     }
   };
 
@@ -328,6 +359,22 @@ export default function ImageUploader() {
           </div>
         </div>
       )}
+
+        {alert && (
+        <div
+            className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white ${
+            alert.type === "success" ? "bg-green-500" : "bg-red-500"
+            }`}
+        >
+            <p>{alert.message}</p>
+            <button
+            onClick={() => setAlert(null)}
+            className="ml-4 text-sm underline hover:text-gray-200"
+            >
+            Close
+            </button>
+        </div>
+        )}
     </div>
   );
 }
