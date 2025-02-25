@@ -13,6 +13,7 @@ import Messages from './Messages/Messages';
 import Premium from './Premium/Premium';
 import Superlikes from './Superlikes/Superlikes';
 import Profile from './Profile/Profile';
+import Details from './Details/Details';
 
 
 import { setUserDetails } from "../../app/Redux/Reducers/userSlice";
@@ -220,6 +221,14 @@ const Home: React.FC = () => {
                 Messages
               </a>
 
+              <a
+                href="#"
+                className={`text-sm font-medium ${activeLink === "details" ? "text-violet-500" : "text-white"} hover:text-violet-500`}
+                onClick={() => handleLinkClick("details")}
+              >
+                Details
+              </a>
+
               {/* Admin Pages */}
               <a
                 href="/people"
@@ -242,6 +251,15 @@ const Home: React.FC = () => {
               </button>
             )}
 
+
+            <button
+              className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 flex items-center space-x-2"
+              onClick={() => handleLinkClick("superlikes")}
+            >
+              <span>Buy Superlikes</span>
+              <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
+            </button>
+            
             {/** Profile Page */}
             <div
               onClick={() => handleLinkClick("profile")}
@@ -252,24 +270,9 @@ const Home: React.FC = () => {
                 alt="Profile"
                 className="h-10 w-10 rounded-full"
               />
-              <p className="px-2 text-white font-medium">{user.name}</p>
             </div>
             {/** Profile Page */}
 
-            <button
-              className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 flex items-center space-x-2"
-              onClick={() => handleLinkClick("superlikes")}
-            >
-              <span>Buy Superlikes</span>
-              <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
-            </button>
-
-            <button
-              className="bg-purple-800 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-purple-900 flex items-center space-x-2"
-              onClick={handleLogout}
-            >
-              <span>Logout</span>
-            </button>
           </div>
 
           {/* Mobile Hamburger Menu Button */}
@@ -323,6 +326,13 @@ const Home: React.FC = () => {
         >
           Admin
         </a>
+        <a
+          href="#"
+          className="block py-2"
+          onClick={() => handleLinkClick("details")}
+        >
+          Details
+        </a>
 
         {/* Mobile buttons and profile */}
         <div className="mt-4 space-y-4">
@@ -335,7 +345,14 @@ const Home: React.FC = () => {
             </button>
           )}
 
-          
+            <button
+              className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 w-full flex items-center space-x-2 justify-center"
+              onClick={() => handleLinkClick("superlikes")}
+            >
+              <span>Buy Superlikes</span>
+              <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
+            </button>
+
             <div 
               className="flex items-center cursor-pointer hover:bg-gray-100 px-2 rounded py-4"
               onClick={() => handleLinkClick("profile")}
@@ -345,24 +362,7 @@ const Home: React.FC = () => {
                 alt="Profile"
                 className="h-10 w-10 rounded-full"
               />
-              <p className="px-2 text-white font-medium">{user.name}</p>
             </div>
-            
-
-            <button
-              className="bg-orange-500 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-orange-600 w-full flex items-center space-x-2 justify-center"
-              onClick={() => handleLinkClick("superlikes")}
-            >
-              <span>Buy Superlikes</span>
-              <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
-            </button>
-
-            <button
-              className="bg-purple-800 text-white text-sm font-semibold py-2 px-6 rounded-sm hover:bg-purple-900 w-full flex items-center space-x-2 justify-center"
-              onClick={handleLogout}
-            >
-              <span>Logout</span>
-            </button>
         </div>
       </div>
 
@@ -374,6 +374,8 @@ const Home: React.FC = () => {
         {activeLink === "premium" && <Premium />}
         {activeLink === "superlikes" && <Superlikes />}
         {activeLink === "profile" && <Profile />}
+        {activeLink === "details" && <Details />}
+
 
         {/* Admin Pages */}
         {activeLink === "users" && <Users />}

@@ -1,6 +1,11 @@
+"use client"
+
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { RootState } from "../../../app/Redux/Store";
+import { useSelector, useDispatch } from "react-redux";
+import { setUserDetails } from "../../../app/Redux/Reducers/userSlice";
+
+
 
 interface User {
     id: string;
@@ -38,6 +43,8 @@ const Profile: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const accessToken = localStorage.getItem("accessToken");
+
+  const dispatch = useDispatch();
 
 
   const currUser = useSelector((state: RootState) => state.user);
@@ -113,6 +120,42 @@ const Profile: React.FC = () => {
     fetchSubscriptionData();
   }, [accessToken]);
 
+  const handleLogout = async () => {
+      
+    
+      if (!accessToken) {
+        console.error("No access token found in localStorage.");
+        return;
+      }
+    
+      try {
+        const response = await fetch("/api/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ token: accessToken }),
+        });
+    
+        if (response.ok) {
+          // Logout successful, remove tokens from localStorage
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+  
+          dispatch(setUserDetails()); // Dispatch to Redux
+    
+          console.log("Logout successful");
+          // Optionally redirect or update the UI
+  
+        } else {
+          console.error("Failed to logout:", await response.json());
+        }
+      } catch (error) {
+        console.error("An error occurred during logout:", error);
+      }
+    };
+
   if (loading) {
     return <div className="h-40 w-40 rounded-full bg-gray-300 animate-pulse" />;
   }
@@ -145,6 +188,12 @@ const Profile: React.FC = () => {
             ) : (
                 <p>No subscription data found.</p>
             )}
+        </div>
+
+        <div className="flex justify-center items-center pt-6">
+          <button className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-sm shadow-md hover:bg-purple-700" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
       </div>
     </div>
