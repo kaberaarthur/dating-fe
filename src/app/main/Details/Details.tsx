@@ -1,14 +1,48 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Details: React.FC = () => {
   const [heightFt, setHeightFt] = useState<string>("5");
   const [heightIn, setHeightIn] = useState<string>("10");
   const [fitness, setFitness] = useState<string>("Athletic");
-  const [education, setEducation] = useState<string>("Bachelor's degree (OSU)");
+  const [education, setEducation] = useState<string>("Bachelor's degree");
   const [career, setCareer] = useState<string>("Tech entrepreneur");
   const [careerOther, setCareerOther] = useState<string>("");
   const [religion, setReligion] = useState<string>("Agnosticism");
   const [religionOther, setReligionOther] = useState<string>("");
+  const [alert, setAlert] = useState<{ message: string; type: string } | null>(null);
+
+  const accessToken = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken"); // Adjust if stored differently
+        if (!accessToken) {
+          console.error("No access token found");
+          return;
+        }
+  
+        const response = await fetch("http://localhost:5000/api/user-profiles/one", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+          }
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+  
+        const data = await response.json();
+        console.log("User Profile:", data);
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
 
   const options: Record<string, string[]> = {
     fitness: ["Athletic", "Average", "Slim", "Heavy"],
@@ -19,17 +53,43 @@ const Details: React.FC = () => {
 
   const isButtonDisabled = !heightFt || !heightIn || !fitness || !education || !career || (career === "Other" && !careerOther) || !religion || (religion === "Other" && !religionOther);
 
-  const handleSubmit = () => {
-    console.log({ height: `${heightFt}ft${heightIn}`, fitness, education, career: career === "Other" ? careerOther : career, religion: religion === "Other" ? religionOther : religion });
+  const handleSubmit = async () => {
+    const profileData = {
+      height: `${heightFt}ft${heightIn}`,
+      fitness,
+      education,
+      career: career === "Other" ? careerOther : career,
+      religion: religion === "Other" ? religionOther : religion
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/api/user-profiles/one", {
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(profileData)
+      });
+      const data = await response.json();
+      
+      if (!response.ok) throw new Error(data.error || "Failed to update profile");
+      
+      setAlert({ message: "Profile updated successfully!", type: "success" });
+    } catch (error) {
+      setAlert({ message: "Error updating profile", type: "error" });
+    }
+    
+    setTimeout(() => setAlert(null), 2000);
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="bg-white p-6 rounded-lg shadow-lg w-[600px] border">
-        <div className="text-4xl text-center">
-            <h2 className="font-bold text-pink-700">Details</h2>
+        <div className="text-center">
+            <h2 className="text-4xl font-bold text-pink-700">Details</h2>
         </div>
-        
+
         <div className="mt-4">
           <label className="block font-semibold">Height</label>
           <div className="flex space-x-2">
@@ -49,7 +109,7 @@ const Details: React.FC = () => {
             <span className="self-center">in</span>
           </div>
         </div>
-        
+
         {Object.entries(options).map(([key, values]) => (
           <div key={key} className="mt-4">
             <label className="block font-semibold capitalize">{key}</label>
@@ -83,8 +143,16 @@ const Details: React.FC = () => {
           </div>
         ))}
 
+        
+
+        {alert && (
+          <div className={`p-3 rounded text-white ${alert.type === "success" ? "bg-green-500" : "bg-red-500"} text-center mt-4`}>
+            {alert.message}
+          </div>
+        )}
+
         <button 
-          className={`w-full mt-6 py-2 rounded ${isButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-pink-700 text-white'}`} 
+          className={`w-full mt-6 py-2 rounded ${isButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-pink-600 text-white'}`} 
           onClick={handleSubmit}
           disabled={isButtonDisabled}
         >
