@@ -222,22 +222,6 @@ const Home: React.FC = () => {
                 Messages
               </a>
 
-              <a
-                href="#"
-                className={`text-sm font-medium ${activeLink === "details" ? "text-violet-500" : "text-white"} hover:text-violet-500`}
-                onClick={() => handleLinkClick("details")}
-              >
-                Details
-              </a>
-
-              <a
-                href="#"
-                className={`text-sm font-medium ${activeLink === "imageupload" ? "text-violet-500" : "text-white"} hover:text-violet-500`}
-                onClick={() => handleLinkClick("imageupload")}
-              >
-                ImageUpload
-              </a>
-
               {/* Admin Pages */}
               <a
                 href="/people"
@@ -334,20 +318,6 @@ const Home: React.FC = () => {
           onClick={() => handleLinkClick("users")}
         >
           Admin
-        </a>
-        <a
-          href="#"
-          className="block py-2"
-          onClick={() => handleLinkClick("details")}
-        >
-          Details
-        </a>
-        <a
-          href="#"
-          className="block py-2"
-          onClick={() => handleLinkClick("imageupload")}
-        >
-          Image Upload
         </a>
 
         {/* Mobile buttons and profile */}
