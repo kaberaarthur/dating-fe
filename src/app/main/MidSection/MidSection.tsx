@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import model from "../../../../public/model.png";
 import cupidarrow from "../../../../public/cupidarrow.png";
 import config from "../../data/config.json";
+import { motion } from "framer-motion";
 
 // Hero Icons
 import { XMarkIcon, HeartIcon } from "@heroicons/react/24/solid";
@@ -16,7 +17,7 @@ type ProfileHeaderProps = {
   age: number;
   matchPercentage: number;
   profileImage: string;
-  nextProfile: (actionType: string) => void; // Type this prop correctly
+  nextProfile: (actionType: string) => void;
 };
 
 type SectionProps = {
@@ -30,6 +31,21 @@ type DetailsProps = {
   details: string[];
 };
 
+// Animation variants for the 5 emojis
+const emojiVariants = {
+  hidden: { opacity: 0, scale: 0 },
+  visible: (i: number) => ({
+    opacity: [0, 1, 0],
+    scale: [0, 1.5, 1],
+    y: [0, -20, -40],
+    transition: {
+      delay: i * 0.2, // Stagger each emoji by 0.2 seconds
+      duration: 0.8,
+      times: [0, 0.5, 1],
+    },
+  }),
+};
+
 // Profile Header Component
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   id,
@@ -38,69 +54,104 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   age,
   matchPercentage,
   profileImage,
-  nextProfile, // Accept nextProfile as a prop
-}) => (
-  <div className="flex flex-col items-center bg-white shadow-md border border-gray-200 rounded-md p-4 w-full max-w-4xl mx-auto">
-    <div className="flex items-center w-full justify-between mb-4">
-      {/* Name and Location */}
-      <div>
-        <h1 className="text-xl font-bold">{name + " " + id}</h1>
-        <p className="text-gray-900 text-sm">
-          {age} • {location}
-        </p>
-      </div>
-      {/* Match Percentage */}
-      <div className="flex items-center space-x-2">
-        <div className="relative flex items-center justify-center text-[#8207D1] font-bold border-2 border-[#8207D1] rounded-full w-10 h-10 p-6">
-          {matchPercentage}%
+  nextProfile,
+}) => {
+  const [showEmojis, setShowEmojis] = useState(false);
+
+  // Handle Like button click with animation
+  const handleLikeClick = () => {
+    setShowEmojis(true); // Trigger emoji animation
+  };
+
+  // Reset emojis and proceed to next profile after animation
+  const onAnimationComplete = () => {
+    setShowEmojis(false); // Reset emoji state
+    nextProfile("Like"); // Proceed to next profile
+  };
+
+  // Array of emojis to display
+  const emojis = ["🔥", "😍", "❤️", "✨", "🎉"];
+
+  return (
+    <div className="flex flex-col items-center bg-white shadow-md border border-gray-200 rounded-md p-4 w-full max-w-4xl mx-auto">
+      <div className="flex items-center w-full justify-between mb-4">
+        {/* Name and Location */}
+        <div>
+          <h1 className="text-xl font-bold">{name + " " + id}</h1>
+          <p className="text-gray-900 text-sm">
+            {age} • {location}
+          </p>
+        </div>
+        {/* Match Percentage */}
+        <div className="flex items-center space-x-2">
+          <div className="relative flex items-center justify-center text-[#8207D1] font-bold border-2 border-[#8207D1] rounded-full w-10 h-10 p-6">
+            {matchPercentage}%
+          </div>
         </div>
       </div>
-    </div>
-    {/* Profile Image */}
-    <div className="relative">
-      <img
-        src={`/${profileImage}`} // Ensure profileImage path is correct
-        alt="Model Image"
-        className="rounded-md w-64 h-64 object-cover"
-      />
-      <button className="absolute bottom-2 right-2 bg-blue-600 text-white text-xs py-1 px-2 rounded-full hover:bg-blue-700">
-        Intro
-      </button>
-    </div>
-    {/* Interaction Buttons */}
-    <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 text-xl justify-center">
-      <button 
-        onClick={() => nextProfile('Pass')}
-        className="flex items-center justify-center space-x-2 border border-gray-700 text-gray-700 font-medium py-2 px-6 rounded-full hover:bg-gray-100"
-      >
-        <XMarkIcon className="w-5 h-5" />
-        <span>Pass</span>
-      </button>
-      <button 
-        onClick={() => nextProfile('Like')}
-        className="flex items-center justify-center space-x-2 bg-pink-500 text-white font-medium py-2 px-6 rounded-full hover:bg-pink-600"
-      >
-        <HeartIcon className="w-5 h-5" />
-        <span>Like</span>
-      </button>
-      <button 
-        onClick={() => nextProfile('Superlike')}
-        className="flex items-center justify-center space-x-2 bg-[#8207D1] text-white font-medium py-2 px-6 rounded-full hover:bg-[#782ea7]"
-      >
+      {/* Profile Image */}
+      <div className="relative">
         <img
-          src={cupidarrow.src}
-          alt="Cupid Arrow"
-          className="rounded-md w-6 h-6 object-cover"
+          src={`/${profileImage}`}
+          alt="Model Image"
+          className="rounded-md w-64 h-64 object-cover"
         />
-        <span>Superlike</span>
-      </button>
+        <button className="absolute bottom-2 right-2 bg-blue-600 text-white text-xs py-1 px-2 rounded-full hover:bg-blue-700">
+          Intro
+        </button>
+      </div>
+      {/* Interaction Buttons */}
+      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 text-xl justify-center">
+        <button
+          onClick={() => nextProfile("Pass")}
+          className="flex items-center justify-center space-x-2 border border-gray-700 text-gray-700 font-medium py-2 px-6 rounded-full hover:bg-gray-100"
+        >
+          <XMarkIcon className="w-5 h-5" />
+          <span>Pass</span>
+        </button>
+        <button
+          onClick={handleLikeClick}
+          className="relative flex items-center justify-center space-x-2 bg-pink-500 text-white font-medium py-2 px-6 rounded-full hover:bg-pink-600"
+        >
+          <HeartIcon className="w-5 h-5" />
+          {showEmojis && (
+            <>
+              {emojis.map((emoji, index) => (
+                <motion.div
+                  key={index}
+                  className="absolute text-2xl"
+                  custom={index} // Pass index for staggered delay
+                  variants={emojiVariants}
+                  initial="hidden"
+                  animate="visible"
+                  onAnimationComplete={index === emojis.length - 1 ? onAnimationComplete : undefined} // Trigger nextProfile only after last emoji
+                >
+                  {emoji}
+                </motion.div>
+              ))}
+            </>
+          )}
+          <span>Like</span>
+        </button>
+        <button
+          onClick={() => nextProfile("Superlike")}
+          className="flex items-center justify-center space-x-2 bg-[#8207D1] text-white font-medium py-2 px-6 rounded-full hover:bg-[#782ea7]"
+        >
+          <img
+            src={cupidarrow.src}
+            alt="Cupid Arrow"
+            className="rounded-md w-6 h-6 object-cover"
+          />
+          <span>Superlike</span>
+        </button>
+      </div>
+      {/* Interaction Buttons */}
+      <p className="text-gray-900 font-medium text-md mt-2">
+        If you like each other, we’ll let you know!
+      </p>
     </div>
-    {/* Interaction Buttons */}
-    <p className="text-gray-900 font-medium text-md mt-2">
-      If you like each other, we’ll let you know!
-    </p>
-  </div>
-);
+  );
+};
 
 // Mid Section Content Components
 const Section: React.FC<SectionProps> = ({ title, content, buttonText }) => (
@@ -153,7 +204,7 @@ const MidSection: React.FC = () => {
     console.log(`Button clicked: ${actionType}`); // Log the action type (Pass, Like, Superlike)
     console.log("Current Profile: ", shuffledProfiles[currentIndex]);
 
-    if(actionType === "Like" || actionType === "Superlike") {
+    if (actionType === "Like" || actionType === "Superlike") {
       console.log("Initiating a Match");
       // Add the Liked Profile as a Sub-Match
       handleAddMatch(shuffledProfiles[currentIndex].id);
@@ -178,29 +229,29 @@ const MidSection: React.FC = () => {
       // The API endpoint to send the POST request to
       const endpoint = `${config.baseUrl}/api/matching`; // Replace with your API URL
       console.log(matchingUser);
-  
+
       // Data to send
       const data = {
         matched_user_id: matchingUser, // Replace with dynamic `matchingUser` properties if needed
         compatibility_score: generateRandomScore(),
         is_liked: 1,
       };
-  
+
       // Send POST request
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
-          'Authorization': `Bearer ${config.authToken}`,
+          Authorization: `Bearer ${config.authToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-  
+
       // Check if the request was successful
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
+
       // Parse the response
       const result = await response.json();
       console.log("Match added successfully:", result);
@@ -208,19 +259,18 @@ const MidSection: React.FC = () => {
       console.error("Error adding match:", error);
     }
   };
-  
 
   return (
     <div className="space-y-8 mt-6">
       {/* Profile Header */}
       <ProfileHeader
-        id = {profile.id}
+        id={profile.id}
         name={profile.name}
         location={profile.location}
         age={profile.age}
         matchPercentage={profile.matchPercentage}
         profileImage={profile.profileImage}
-        nextProfile={nextProfile}  // Passing nextProfile to ProfileHeader
+        nextProfile={nextProfile} // Passing nextProfile to ProfileHeader
       />
 
       {/* Mid-Section Content */}
