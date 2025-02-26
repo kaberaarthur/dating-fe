@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
+const accessToken = localStorage.getItem("accessToken");
+
 interface ImageFile {
   file: File;
   url: string;
@@ -157,41 +159,62 @@ export default function ImageUploader() {
   };
 
   const handleSubmit = async () => {
-    if (processedImages.main && processedImages.secondary.every((img) => img !== null)) {
-      console.log({
-        mainImage: processedImages.main.file,
-        secondaryImages: processedImages.secondary.map((img) => img!.file),
+    if (!processedImages.main || !processedImages.secondary.every((img) => img !== null)) {
+      return;
+    }
+  
+    try {
+      if (!accessToken) {
+        console.error("No access token found");
+        return;
+      }
+  
+      // 1️⃣ Upload Main Image First
+      const mainFormData = new FormData();
+      mainFormData.append("mainImage", processedImages.main.file);
+  
+      const mainResponse = await fetch("http://localhost:5000/api/new-image-upload", {
+        method: "POST",
+        body: mainFormData,
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+        },
       });
-      // Upload processedImages to your server here
-      const formData = new FormData();
-    
-        formData.append("mainImage", processedImages.main.file);
-        processedImages.secondary.forEach((img, index) => {
-        formData.append("secondaryImages", img!.file);
+  
+      if (!mainResponse.ok) {
+        throw new Error("Main image upload failed");
+      }
+  
+      console.log("Main image uploaded successfully!");
+  
+      // 2️⃣ Upload Secondary Images One by One
+      for (const img of processedImages.secondary) {
+        const secondaryFormData = new FormData();
+        secondaryFormData.append("secondaryImages", img!.file);
+  
+        const secResponse = await fetch("http://localhost:5000/api/new-image-upload", {
+          method: "POST",
+          body: secondaryFormData,
+          headers: {
+            "Authorization": `Bearer ${accessToken}`,
+          },
         });
-
-        try {
-            const response = await fetch("http://localhost:5000/api/new-image-upload", { // Updated URL
-                method: "POST",
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error("Upload failed");
-            }
-
-            const result = await response.json();
-            console.log("Upload result:", result);
-            setAlert({ type: "success", message: "Files uploaded successfully!" });
-            setTimeout(() => {
-                window.location.reload();
-              }, 2000); // 2000 milliseconds = 2 seconds
-        } catch (error) {
-            console.error("Error uploading files:", error);
-            setAlert({ type: "error", message: "Failed to upload files. Please try again." });
+  
+        if (!secResponse.ok) {
+          throw new Error("Secondary image upload failed");
         }
+  
+        console.log(`Secondary image ${img!.file.name} uploaded successfully!`);
+      }
+  
+      setAlert({ type: "success", message: "Files uploaded successfully!" });
+      setTimeout(() => window.location.reload(), 2000);
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      setAlert({ type: "error", message: "Failed to upload files. Please try again." });
     }
   };
+  
 
   const isSubmitDisabled: boolean =
     !processedImages.main || processedImages.secondary.some((img) => img === null);

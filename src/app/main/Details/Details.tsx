@@ -7,7 +7,7 @@ const Details: React.FC = () => {
   const [education, setEducation] = useState<string>("Bachelor's degree");
   const [career, setCareer] = useState<string>("Tech entrepreneur");
   const [careerOther, setCareerOther] = useState<string>("");
-  const [religion, setReligion] = useState<string>("Agnosticism");
+  const [religion, setReligion] = useState<string>("Christianity");
   const [religionOther, setReligionOther] = useState<string>("");
   const [alert, setAlert] = useState<{ message: string; type: string } | null>(null);
 

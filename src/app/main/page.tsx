@@ -14,6 +14,7 @@ import Premium from './Premium/Premium';
 import Superlikes from './Superlikes/Superlikes';
 import Profile from './Profile/Profile';
 import Details from './Details/Details';
+import ImageUpload from './ImageUpload/ImageUpload';
 
 
 import { setUserDetails } from "../../app/Redux/Reducers/userSlice";
@@ -229,6 +230,14 @@ const Home: React.FC = () => {
                 Details
               </a>
 
+              <a
+                href="#"
+                className={`text-sm font-medium ${activeLink === "imageupload" ? "text-violet-500" : "text-white"} hover:text-violet-500`}
+                onClick={() => handleLinkClick("imageupload")}
+              >
+                ImageUpload
+              </a>
+
               {/* Admin Pages */}
               <a
                 href="/people"
@@ -259,7 +268,7 @@ const Home: React.FC = () => {
               <span>Buy Superlikes</span>
               <img src={fire.src} alt="Fire Icon" className="h-5 w-5" />
             </button>
-            
+
             {/** Profile Page */}
             <div
               onClick={() => handleLinkClick("profile")}
@@ -333,6 +342,13 @@ const Home: React.FC = () => {
         >
           Details
         </a>
+        <a
+          href="#"
+          className="block py-2"
+          onClick={() => handleLinkClick("imageupload")}
+        >
+          Image Upload
+        </a>
 
         {/* Mobile buttons and profile */}
         <div className="mt-4 space-y-4">
@@ -375,6 +391,7 @@ const Home: React.FC = () => {
         {activeLink === "superlikes" && <Superlikes />}
         {activeLink === "profile" && <Profile />}
         {activeLink === "details" && <Details />}
+        {activeLink === "imageupload" && <ImageUpload />}
 
 
         {/* Admin Pages */}
