@@ -9,6 +9,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 
+// Set Menu Item for Additional Profile Details
+import { setActiveLink } from "../../../app/Redux/Reducers/activeLinkSlice";
+
 interface User {
     id: string;
     user_id: string;
@@ -164,8 +167,6 @@ const Profile: React.FC = () => {
   }, [accessToken]);
 
   const handleLogout = async () => {
-      
-    
       if (!accessToken) {
         console.error("No access token found in localStorage.");
         return;
@@ -197,6 +198,19 @@ const Profile: React.FC = () => {
       } catch (error) {
         console.error("An error occurred during logout:", error);
       }
+    };
+
+    const redirectToDetails = async () => {
+      console.log("Redirect to Update Details");
+      // Set the Menu Item Here so that user can update details plus upload images
+      dispatch(setActiveLink("details"));
+    };
+
+
+    const redirectToImageUpload = async () => {
+      console.log("Redirect to Image Upload");
+      // Set the Menu Item Here so that user can update details plus upload images
+      dispatch(setActiveLink("imageupload"));
     };
 
   if (loading) {
@@ -256,8 +270,29 @@ const Profile: React.FC = () => {
             )}
         </div>
 
-        <div className="flex justify-center items-center pt-6">
-          <button className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-sm shadow-md hover:bg-purple-700" onClick={handleLogout}>
+        <div className="flex justify-center items-center pt-6 w-full">
+          <button 
+            className="w-full px-6 py-3 bg-purple-700 text-white font-semibold rounded-sm shadow-md hover:bg-purple-800" 
+            onClick={redirectToDetails}
+          >
+            Update Details
+          </button>
+        </div>
+
+        <div className="flex justify-center items-center pt-6 w-full">
+          <button 
+            className="w-full px-6 py-3 bg-orange-500 text-white font-semibold rounded-sm shadow-md hover:bg-orange-600" 
+            onClick={redirectToImageUpload}
+          >
+            Upload Images
+          </button>
+        </div>
+
+        <div className="flex justify-center items-center pt-6 w-full">
+          <button 
+            className="w-full px-6 py-3 bg-red-600 text-white font-semibold rounded-sm shadow-md hover:bg-red-700" 
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>

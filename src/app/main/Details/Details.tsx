@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
 
+// Set Menu Item for Additional Profile Details
+import { setActiveLink } from "../../../app/Redux/Reducers/activeLinkSlice";
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../../app/Redux/Store"; 
+
 const Details: React.FC = () => {
   const [heightFt, setHeightFt] = useState<string>("5");
   const [heightIn, setHeightIn] = useState<string>("10");
@@ -10,6 +16,9 @@ const Details: React.FC = () => {
   const [religion, setReligion] = useState<string>("Christianity");
   const [religionOther, setReligionOther] = useState<string>("");
   const [alert, setAlert] = useState<{ message: string; type: string } | null>(null);
+
+  // Use `useDispatch` to dispatch actions
+    const dispatch = useDispatch();
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -76,6 +85,14 @@ const Details: React.FC = () => {
       if (!response.ok) throw new Error(data.error || "Failed to update profile");
       
       setAlert({ message: "Profile updated successfully!", type: "success" });
+
+      // Redirect user to main Page
+      // Set the Menu Item Here so that user can update details plus upload images
+        dispatch(setActiveLink("imageupload"));
+    
+        // If a user already exists, redirect user to home page
+        window.location.href = "/main";
+
     } catch (error) {
       setAlert({ message: "Error updating profile", type: "error" });
     }

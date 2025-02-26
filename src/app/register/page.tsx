@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { incrementStep, decrementStep } from "../Redux/Reducers/stepSlice"; // Import the incrementStep action
 import Form from "../../components/Form";
 import Name from "../../components/Name";
@@ -17,22 +16,29 @@ import Password from "../../components/Password";
 import { BackwardIcon, CalendarDaysIcon, EnvelopeIcon, UserIcon, CubeIcon, PhoneIcon, CheckBadgeIcon, EyeDropperIcon, ListBulletIcon, KeyIcon } from '@heroicons/react/24/solid'
 import { MapPinIcon } from "@heroicons/react/16/solid";
 
+// Set Menu Item for Additional Profile Details
+import { setActiveLink } from "../../app/Redux/Reducers/activeLinkSlice";
 // Redux
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/Redux/Store"; 
+
 
 const EmailPage: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
 
+  // Use `useDispatch` to dispatch actions
+  const dispatch = useDispatch();
+
   if(user.id) {
+    // Set the Menu Item Here so that user can update details plus upload images
+    dispatch(setActiveLink("details"));
+
     // If a user already exists, redirect user to home page
     window.location.href = "/main";
   }
 
   // Use `useSelector` to get the `currentStep` from the Redux store
   const currentStep = useSelector((state: any) => state.step.currentStep);
-
-  // Use `useDispatch` to dispatch actions
-  const dispatch = useDispatch();
 
   const steps = [
     { component: <Form />, title: "What's Your Email Address?", icon: EnvelopeIcon },
