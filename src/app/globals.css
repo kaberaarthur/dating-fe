@@ -20,6 +20,28 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.slick-prev, .slick-next {
+  z-index: 10 !important;
+  display: block !important;
+  width: 40px !important;
+  height: 40px !important;
+  /*background-color: rgba(0, 0, 0, 0.5) !important;*/
+  border-radius: 50% !important;
+}
+
+.slick-prev {
+  left: 10px !important;
+}
+
+.slick-next {
+  right: 10px !important;
+}
+
+.slick-prev::before, .slick-next::before {
+  font-size: 24px !important;
+  color: white !important;
+}
+
 
 @font-face {
   font-family: 'GabrielSans';

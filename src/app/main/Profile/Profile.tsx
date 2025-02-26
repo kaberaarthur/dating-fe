@@ -5,7 +5,9 @@ import { RootState } from "../../../app/Redux/Store";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserDetails } from "../../../app/Redux/Reducers/userSlice";
 
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 interface User {
     id: string;
@@ -34,6 +36,14 @@ interface User {
     updated_at: string;
     plan_id: string | null;
   }
+
+  interface Image {
+    id: number;
+    user_id: number;
+    image_url: string;
+    is_profile_picture: number;
+    uploaded_at: string;
+  }
   
 
 const Profile: React.FC = () => {
@@ -51,6 +61,39 @@ const Profile: React.FC = () => {
   const userId = currUser.id;
 
   console.log("User ID: ", userId);
+
+  const [images, setImages] = useState<Image[]>([]);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.error("No access token found");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/api/new-image-upload/images", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch images");
+        }
+
+        const data = await response.json();
+        setImages(data.images); // Assuming the response contains an `images` array
+        console.log(data.images);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+
+    fetchImages();
+  }, []);
 
   useEffect(() => {
     if (!accessToken) {
@@ -171,8 +214,31 @@ const Profile: React.FC = () => {
   return (
     <div className="max-w-md mx-auto p-4 shadow-lg rounded-xl bg-white">
       <div className="flex flex-col items-center">
-        <div className="w-40 h-40 mb-4 rounded-lg overflow-hidden border">
-          <img src={user.profile_picture || "/default-avatar.png"} alt={user.name} className="w-full h-full object-cover" />
+        <div className="w-full h-full mb-4 rounded-lg overflow-hidden border">
+          {images.length > 0 ? (
+            <Slider 
+                dots 
+                infinite 
+                speed={500} 
+                slidesToShow={1} 
+                slidesToScroll={1} 
+                autoplay 
+                autoplaySpeed={3000}
+                arrows={true}
+              >
+              {images.map((image) => (
+                <div key={image.id}>
+                  <img
+                    src={`http://localhost:5000/api/new-image-upload/uploads/${image.image_url}`}
+                    alt={`User Image - ${image.image_url}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </Slider>
+          ) : (
+            <img src={user.profile_picture || "/default-avatar.png"} alt={user.name} className="w-full h-full object-cover" />
+          )}
         </div>
         <h2 className="text-xl font-semibold">{user.name}</h2>
         <p className="text-gray-500">{user.email}</p>
@@ -199,5 +265,44 @@ const Profile: React.FC = () => {
     </div>
   );
 };
+
+const PrevArrow = (props: any) => {
+  const { className, style, onClick } = props;
+  return (
+    <div 
+      className={className}
+      style={{ 
+        ...style, 
+        display: "block", 
+        background: "black", 
+        borderRadius: "50%", 
+        padding: "10px",
+        left: "-30px",
+        zIndex: 1000
+      }} 
+      onClick={onClick}
+    />
+  );
+};
+
+const NextArrow = (props: any) => {
+  const { className, style, onClick } = props;
+  return (
+    <div 
+      className={className}
+      style={{ 
+        ...style, 
+        display: "block", 
+        background: "black", 
+        borderRadius: "50%", 
+        padding: "10px",
+        right: "-30px",
+        zIndex: 1000
+      }} 
+      onClick={onClick}
+    />
+  );
+};
+
 
 export default Profile;
