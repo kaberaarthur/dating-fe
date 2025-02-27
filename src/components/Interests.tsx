@@ -36,6 +36,8 @@ const Interests: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [complete, setComplete] = useState<boolean>(false);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const interestsList = [
     "Music",
     "Sports",
@@ -94,6 +96,7 @@ const Interests: React.FC = () => {
   }, [complete]);
 
   const createUser = async () => {
+    setLoading(true);
     const userData = {
       name: user.name,
       email: user.email,
@@ -132,6 +135,7 @@ const Interests: React.FC = () => {
     } catch (error) {
       console.error("Unexpected error:", error);
     }
+    setLoading(false);
   };
 
   const createUserProfile = async (data: UserProfileResponse) => {
@@ -212,9 +216,19 @@ const Interests: React.FC = () => {
         {error && <p className="text-yellow-400 text-center">{error}</p>}
         <button
           onClick={handleNext}
-          className="bg-[#830AD1] text-white font-bold py-2 px-4 rounded-md hover:bg-[#4C0678] transition"
+          disabled={loading}
+          className={`bg-[#830AD1] text-white font-bold py-2 px-4 rounded-md transition flex items-center justify-center ${
+            loading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#4C0678]"
+          }`}
         >
-          Next
+          {loading ? (
+            <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+          ) : (
+            "Next"
+          )}
         </button>
       </div>
     </div>

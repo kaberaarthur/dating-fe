@@ -38,6 +38,10 @@ import Link from "next/link";
 
 import { useNavigate } from "react-router-dom";
 
+interface Profile {
+  images_updated: number;
+  details_updated: number;
+}
 
 export const goToMessages = (dispatch: any) => {
   dispatch(setActiveLink("messages"));
@@ -49,7 +53,61 @@ const Home: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
   const accessToken = localStorage.getItem("accessToken");
 
+  const [profile, setProfile] = useState<Profile | null>(null);
+
   const navigate = useNavigate();
+
+  // Function to determine and dispatch the correct navigation action
+  const handleProfileRedirect = (profileData: Profile) => {
+    if (profileData.details_updated === 0) {
+      dispatch(setActiveLink("details")); // Prioritize details if not updated
+    } else if (profileData.images_updated === 0) {
+      dispatch(setActiveLink("imageupload")); // Only images need updating
+    }
+  };
+
+  useEffect(() => {
+    if (!accessToken) {
+      setError("Access token is missing");
+      setLoading(false);
+      return; // Early exit if no accessToken
+    }
+
+    const fetchProfileData = async () => {
+      try {
+        const profileRes = await fetch("/backend/api/user-profiles/my-profile", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!profileRes.ok) {
+          throw new Error("Failed to fetch profile");
+        }
+
+        const profileData: Profile = await profileRes.json();
+        setProfile(profileData); // Save profile data to state
+        console.log("The User Now: ", profileData);
+
+        // Check details_updated and images_updated
+        if (profileData.details_updated === 0) {
+          dispatch(setActiveLink("details")); // Prioritize details if not updated
+        } else if (profileData.images_updated === 0) {
+          dispatch(setActiveLink("imageupload")); // Only images need updating
+        }
+
+      } catch (error) {
+        setError("Failed to load profile data");
+        console.error("Error fetching profile data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, [accessToken, dispatch]);
 
   // console.log("Current User: ", user.user_id);
 
@@ -149,6 +207,12 @@ const Home: React.FC = () => {
   // Function to handle link click and set active component
   const handleLinkClick = (link: string) => {
     dispatch(setActiveLink(link));
+
+    // Check if profile is loaded
+    if (profile) {
+      handleProfileRedirect(profile);
+    }
+    
     setIsMenuOpen(false); // Close menu after selecting a link
   };
 
