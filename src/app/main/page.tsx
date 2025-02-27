@@ -4,7 +4,7 @@ import Modal from "./Modal/Modal";
 import joto from "../../../public/joto.png";
 import socialpendo from "../../../public/socialpendo.png";
 import fire from "../../../public/fire.png";
-import sampleProfile from "../../../public/sample-profile.jpg";
+import sampleProfile from "../../../public/avatar.jpg";
 
 import Footer from "./Footer/Footer";
 import MidSection from './MidSection/MidSection';
@@ -43,6 +43,14 @@ interface Profile {
   details_updated: number;
 }
 
+interface Image {
+  id: number;
+  user_id: number;
+  image_url: string;
+  is_profile_picture: number;
+  uploaded_at: string;
+}
+
 export const goToMessages = (dispatch: any) => {
   dispatch(setActiveLink("messages"));
 };
@@ -56,6 +64,47 @@ const Home: React.FC = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
 
   const navigate = useNavigate();
+
+  const [images, setImages] = useState<Image[]>([]);
+  const [profileImage, setProfileImage] = useState<Image | null>(null);
+  
+    useEffect(() => {
+      const fetchImages = async () => {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) {
+          console.error("No access token found");
+          return;
+        }
+  
+        try {
+          const response = await fetch("http://localhost:5000/api/new-image-upload/images", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+  
+          if (!response.ok) {
+            console.log("Failed to fetch images");
+          }
+  
+          const data = await response.json();
+          setImages(data.images); // Assuming the response contains an `images` array
+          console.log(data.images);
+
+          // Find the profile picture
+          const profilePic = data.images.find((img: Image) => img.is_profile_picture === 1);
+          if (profilePic) {
+            setProfileImage(profilePic);
+          }
+
+        } catch (error) {
+          console.error("Error fetching images:", error);
+        }
+      };
+  
+      fetchImages();
+    }, []);
 
   // Function to determine and dispatch the correct navigation action
   const handleProfileRedirect = (profileData: Profile) => {
@@ -324,9 +373,13 @@ const Home: React.FC = () => {
               className="flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded"
             >
               <img
-                src={sampleProfile.src} // Use a fallback image if profilePicture is missing
-                alt="Profile"
-                className="h-10 w-10 rounded-full"
+                src={profileImage 
+                  ? `http://localhost:5000/api/new-image-upload/uploads/${profileImage.image_url}` 
+                  : sampleProfile.src} // Fallback if profileImage is null
+                alt={profileImage 
+                  ? `User Image - ${profileImage.image_url}` 
+                  : "Default Profile"}
+                className="w-8 h-8 object-cover rounded-full" // Added 'rounded-full' for a circular shape
               />
             </div>
             {/** Profile Page */}
@@ -409,9 +462,13 @@ const Home: React.FC = () => {
               onClick={() => handleLinkClick("profile")}
             >
               <img
-                src={sampleProfile.src} // Use a fallback image if `profilePicture` is missing
-                alt="Profile"
-                className="h-10 w-10 rounded-full"
+                src={profileImage 
+                  ? `http://localhost:5000/api/new-image-upload/uploads/${profileImage.image_url}` 
+                  : sampleProfile.src} // Fallback if profileImage is null
+                alt={profileImage 
+                  ? `User Image - ${profileImage.image_url}` 
+                  : "Default Profile"}
+                className="h-10 w-10 rounded-full object-cover" // Matches the styling from the first snippet
               />
             </div>
         </div>

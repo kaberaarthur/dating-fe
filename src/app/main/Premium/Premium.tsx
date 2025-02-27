@@ -131,7 +131,7 @@ const Premium = () => {
     } catch (error) {
        setIsPaying(false);
         if (error instanceof Error) {
-          setError('Error sending Mpesa request');
+          setError('Error sending Mpesa request, contact support on +254 713 579545');
             console.log('Error sending Mpesa request:', error.message);
         } else {
           setError('Error handling Mpesa Payment');
@@ -146,72 +146,50 @@ const Premium = () => {
       <div className="bg-black text-white py-4 px-4 text-lg font-medium">
         Amazing OkCupid features you can’t live without.
       </div>
-      
-      {/* Tab Navigation 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 justify-center mt-6 font-normal">
-        <button
-          className={`px-6 py-2 border ${
-            activeTab === "basic"
-              ? "bg-[#2E0549] text-[#EE2481] border-gray-100"
-              : "bg-gray-100 text-[#2E0549] border-[#2E0549]"
-          }`}
-          onClick={() => setActiveTab("basic")}
-        >
-          OKCUPID BASIC
-        </button>
-        <button
-          className={`px-6 py-2 border ${
-            activeTab === "premium"
-              ? "bg-[#2E0549] text-[#EE2481] border-gray-100"
-              : "bg-gray-100 text-[#2E0549] border-[#2E0549]"
-          }`}
-          onClick={() => setActiveTab("premium")}
-        >
-          OKCUPID PREMIUM
-        </button>
-      </div>*/}
 
       {/* Plans Section */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Plans Column */}
-        <div>
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`border p-4 mb-4 cursor-pointer ${
-                selectedPlan?.id === plan.id
-                  ? "border-purple-500 bg-purple-200"
-                  : plan.popular
-                  ? "border-purple-500 bg-purple-50"
-                  : "border-gray-300"
-              }`}
-              onClick={() => setSelectedPlan(plan)}
-            >
-              {plan.popular && (
-                <span className="bg-purple-500 text-white text-xs uppercase px-2 py-1 inline-block mb-2">
-                  Most Popular
-                </span>
-              )}
-              <div className="flex justify-start items-start">
-                <div>
-                  <h4 className="text-lg font-bold">{plan.name}</h4>
-                  <p className="text-gray-700">{plan.description}</p>
-                  <p className="text-gray-700 font-semibold">KES {plan.price}</p>
+      <div className="mt-6 w-full flex justify-center">
+        <div className="w-full max-w-lg lg:max-w-xl xl:max-w-2xl grid grid-cols-1 gap-12">
+          {/* Plans Column */}
+          <div>
+            {plans.map((plan) => (
+              <div
+                key={plan.id}
+                className={`border p-4 mb-4 cursor-pointer ${
+                  selectedPlan?.id === plan.id
+                    ? "border-purple-500 bg-purple-200"
+                    : plan.popular
+                    ? "border-purple-500 bg-purple-50"
+                    : "border-gray-300"
+                }`}
+                onClick={() => setSelectedPlan(plan)}
+              >
+                {plan.popular && (
+                  <span className="bg-purple-500 text-white text-xs uppercase px-2 py-1 inline-block mb-2">
+                    Most Popular
+                  </span>
+                )}
+                <div className="flex justify-center items-center">
+                  <div>
+                    <h4 className="text-lg font-bold">{plan.name}</h4>
+                    <p className="text-gray-700">{plan.description}</p>
+                    <p className="text-gray-700 font-semibold">KES {plan.price}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-          {/* Subscription Button */}
-          <button 
-            className={`w-full bg-blue-600 text-white py-3 font-bold rounded mt-4 ${!selectedPlan ? "opacity-50 cursor-not-allowed" : ""}`}
-            onClick={handleSubscribe}
-            disabled={!selectedPlan}
-          >
-            {selectedPlan ? `Subscribe to ${selectedPlan.name}` : "Select a Plan"}
-          </button>
+            {/* Subscription Button */}
+            <button 
+              className={`w-full bg-blue-600 text-white py-3 font-bold rounded mt-4 ${!selectedPlan ? "opacity-50 cursor-not-allowed" : ""}`}
+              onClick={handleSubscribe}
+              disabled={!selectedPlan}
+            >
+              {selectedPlan ? `Subscribe to ${selectedPlan.name}` : "Select a Plan"}
+            </button>
 
-          <p className="text-gray-500 text-sm mt-2">This is a secure page</p>
+            <p className="text-gray-500 text-sm mt-2 text-center">This is a secure page</p>
+          </div>
         </div>
       </div>
 
