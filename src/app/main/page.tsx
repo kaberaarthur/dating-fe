@@ -155,7 +155,8 @@ const Home: React.FC = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Failed to check subscription");
+          console.log("No subscription record found.");
+            setSubscriptionPaid(false);
         }
 
         const data = await response.json();
@@ -212,7 +213,7 @@ const Home: React.FC = () => {
     if (profile) {
       handleProfileRedirect(profile);
     }
-    
+
     setIsMenuOpen(false); // Close menu after selecting a link
   };
 
