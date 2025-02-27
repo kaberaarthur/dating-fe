@@ -20,13 +20,15 @@ interface Plan {
 }
 
 const Premium = () => {
+  const user = useSelector((state: RootState) => state.user);
+
   const [activeTab, setActiveTab] = useState("premium");
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("0712345678"); // Default number
+  const [phoneNumber, setPhoneNumber] = useState("0700000000"); // Default number
   const [isPaying, setIsPaying] = useState(false); // Payment processing state
 
   const [receiptData, setReceiptData] = useState<{ transactionId: string; amount: string; status: string } | null>(null);
@@ -84,6 +86,7 @@ const Premium = () => {
   const handleSubscribe = () => {
     if (selectedPlan) {
       setIsModalOpen(true);
+      setPhoneNumber(user.phone);
     }
   };
 
