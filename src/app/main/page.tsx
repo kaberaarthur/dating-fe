@@ -213,7 +213,7 @@ const Home: React.FC = () => {
         console.log("User has a subscription: ", data.isPaid)
         
       } catch (error) {
-        console.error("Error checking subscription:", error);
+        console.log("Error checking subscription:", error);
         setSubscriptionPaid(false);
       }
     };

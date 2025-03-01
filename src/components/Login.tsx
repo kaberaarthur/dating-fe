@@ -40,7 +40,7 @@ const Login: React.FC = () => {
 
       // Sign the User In
       try {
-        const response = await fetch(`${config.baseUrl}/api/users/login`, {
+        const response = await fetch(`http://localhost:5000/api/users/login`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -50,7 +50,7 @@ const Login: React.FC = () => {
     
           if (!response.ok) {
             const errorData = await response.json();
-            console.error("Error creating user profile:", errorData);
+            console.log("Error logging in User:", errorData);
             setError("An Error Occurred");
             return;
           }
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
 
           getUserProfile(result.accessToken, result.user_id);
 
-          console.log(result.accessToken);
+          // console.log(result.accessToken);
         } catch (error) {
             console.error("Unexpected error occured:", error);
         }
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
 
   const getUserProfile = async (accessToken: string, user_id: number) => {
     try{
-        const response = await fetch(`${config.baseUrl}/api/user-profiles/${user_id}`, {
+        const response = await fetch(`http://localhost:5000/api/user-profiles/my-profile`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -83,7 +83,7 @@ const Login: React.FC = () => {
 
           if (!response.ok) {
             const errorData = await response.json();
-            console.error("Error fetching user profile:", errorData);
+            console.log("Error fetching user profile:", errorData);
             return;
           }
           
@@ -136,7 +136,7 @@ const Login: React.FC = () => {
             Not yet signed up? 
               <span className="text-purple-800 underline">
                 <Link href="/register">
-                   Register
+                   {" Register"}
                 </Link>
               </span>
           </label>
