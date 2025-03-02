@@ -51,10 +51,6 @@ interface Image {
   uploaded_at: string;
 }
 
-export const goToMessages = (dispatch: any) => {
-  dispatch(setActiveLink("messages"));
-};
-
 const Home: React.FC = () => {
   const dispatch = useDispatch();
   const activeLink = useSelector((state: RootState) => state.activeLink.activeLink);

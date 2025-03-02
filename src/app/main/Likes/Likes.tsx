@@ -3,7 +3,8 @@ import config from "../../data/config.json";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../app/Redux/Store";
 
-import { goToMessages } from "../page"
+import { setActiveLink } from "../../../app/Redux/Reducers/activeLinkSlice";
+
 
 // Interface for the Like data
 interface Like {
@@ -106,7 +107,7 @@ const Likes: React.FC = () => {
   
       const data = await response.json();
       console.log("Message Send Response: ", data);
-      goToMessages(dispatch);
+      dispatch(setActiveLink("messages"));
 
     } catch (error) {
       console.error('Error during patch request:', error);
