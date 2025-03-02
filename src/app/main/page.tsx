@@ -71,13 +71,9 @@ const Home: React.FC = () => {
     useEffect(() => {
       const fetchImages = async () => {
         const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken) {
-          console.error("No access token found");
-          return;
-        }
   
         try {
-          const response = await fetch("http://localhost:5000/api/new-image-upload/images", {
+          const response = await fetch(`${config.baseUrl}/api/new-image-upload/images`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -116,10 +112,9 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!accessToken) {
-      setError("Access token is missing");
-      setLoading(false);
-      return; // Early exit if no accessToken
+    if(!accessToken) {
+      console.log("No Access Token Found");
+      window.location.href = "/login"
     }
 
     const fetchProfileData = async () => {
@@ -160,15 +155,11 @@ const Home: React.FC = () => {
 
   // console.log("Current User: ", user.user_id);
 
-  if(!user.id) {
-    window.location.href = "/login";
-  }
-
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   // const [activeLink, setActiveLink] = useState<string>("discover"); // Default active link is "discover"
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false); // State for managing hamburger menu
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   // Messages
@@ -180,18 +171,6 @@ const Home: React.FC = () => {
   useEffect(() => {
     const checkSubscription = async () => {
       console.log(accessToken);
-
-      if (!accessToken) {
-        console.error("No access token found.");
-        return;
-      }
-
-      if (!user.id) {
-        window.location.href = "/login";
-        return;
-      } else {
-        console.log("Current User ID: ", user.id);
-      }
 
       try {
         const response = await fetch(`${config.baseUrl}/api/subscriptions/check-subscription`, {
@@ -267,14 +246,7 @@ const Home: React.FC = () => {
   };
 
 
-  const handleLogout = async () => {
-    
-  
-    if (!accessToken) {
-      console.error("No access token found in localStorage.");
-      return;
-    }
-  
+  const handleLogout = async () => {  
     try {
       const response = await fetch("/api/logout", {
         method: "POST",
@@ -374,7 +346,7 @@ const Home: React.FC = () => {
             >
               <img
                 src={profileImage 
-                  ? `http://localhost:5000/api/new-image-upload/uploads/${profileImage.image_url}` 
+                  ? `${config.baseUrl}/api/new-image-upload/uploads/${profileImage.image_url}` 
                   : sampleProfile.src} // Fallback if profileImage is null
                 alt={profileImage 
                   ? `User Image - ${profileImage.image_url}` 
@@ -463,7 +435,7 @@ const Home: React.FC = () => {
             >
               <img
                 src={profileImage 
-                  ? `http://localhost:5000/api/new-image-upload/uploads/${profileImage.image_url}` 
+                  ? `${config.baseUrl}/api/new-image-upload/uploads/${profileImage.image_url}` 
                   : sampleProfile.src} // Fallback if profileImage is null
                 alt={profileImage 
                   ? `User Image - ${profileImage.image_url}` 

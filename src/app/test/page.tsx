@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/Store";
 
+import config from "../data/config.json";
+
 interface ApiResponse {
   message: string;
   status: string;
@@ -16,7 +18,7 @@ const TestPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/register-test");
+        const res = await fetch(`${config.baseUrl}/api/users/register-test`);
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }

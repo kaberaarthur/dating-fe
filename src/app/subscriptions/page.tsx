@@ -6,6 +6,8 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import AdminNav from "@/components/AdminNav";
 
+import config from "../data/config.json";
+
 // Subscription type definition
 interface Subscription {
   user_id: number;
@@ -37,7 +39,7 @@ export default function Subscriptions() {
 
   const fetchSubscriptions = async () => {
     try {
-      const response = await axios.get<Subscription[]>("http://localhost:5000/api/subscriptions", {
+      const response = await axios.get<Subscription[]>(`${config.baseUrl}/api/subscriptions`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,

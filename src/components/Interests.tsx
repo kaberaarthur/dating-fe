@@ -154,7 +154,7 @@ const Interests: React.FC = () => {
     const accessToken = data.accessToken;
 
     if (!accessToken) {
-      console.error("Access token is missing.");
+      console.log("Access token is missing.");
       return;
     }
 

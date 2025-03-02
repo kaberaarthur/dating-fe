@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import config from "../data/config.json";
 
 interface ImageFile {
   file: File;
@@ -171,7 +172,7 @@ export default function ImageUploader() {
         });
 
         try {
-            const response = await fetch("http://localhost:5000/api/new-image-upload", { // Updated URL
+            const response = await fetch(`${config.baseUrl}/api/new-image-upload`, { // Updated URL
                 method: "POST",
                 body: formData,
             });

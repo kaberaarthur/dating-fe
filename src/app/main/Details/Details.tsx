@@ -6,6 +6,8 @@ import { setActiveLink } from "../../../app/Redux/Reducers/activeLinkSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../app/Redux/Store"; 
 
+import config from "../../data/config.json";
+
 const Details: React.FC = () => {
   const [heightFt, setHeightFt] = useState<string>("5");
   const [heightIn, setHeightIn] = useState<string>("10");
@@ -31,7 +33,7 @@ const Details: React.FC = () => {
           return;
         }
   
-        const response = await fetch("http://localhost:5000/api/user-profiles/one", {
+        const response = await fetch(`${config.baseUrl}/api/user-profiles/one`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${accessToken}`,
@@ -72,7 +74,7 @@ const Details: React.FC = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/user-profiles/one", {
+      const response = await fetch(`${config.baseUrl}/api/user-profiles/one`, {
         method: "PATCH",
         headers: {
             "Authorization": `Bearer ${accessToken}`,

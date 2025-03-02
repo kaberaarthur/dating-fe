@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
+import config from "../../data/config.json";
+
 const accessToken = localStorage.getItem("accessToken");
 
 interface ImageFile {
@@ -176,7 +178,7 @@ export default function ImageUploader() {
       const mainFormData = new FormData();
       mainFormData.append("mainImage", processedImages.main.file);
   
-      const mainResponse = await fetch("http://localhost:5000/api/new-image-upload", {
+      const mainResponse = await fetch(`${config.baseUrl}/api/new-image-upload`, {
         method: "POST",
         body: mainFormData,
         headers: {
@@ -195,7 +197,7 @@ export default function ImageUploader() {
         const secondaryFormData = new FormData();
         secondaryFormData.append("secondaryImages", img!.file);
   
-        const secResponse = await fetch("http://localhost:5000/api/new-image-upload", {
+        const secResponse = await fetch(`${config.baseUrl}/api/new-image-upload`, {
           method: "POST",
           body: secondaryFormData,
           headers: {

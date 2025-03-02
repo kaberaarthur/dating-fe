@@ -6,6 +6,8 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import AdminNav from "@/components/AdminNav";
 
+import config from "../data/config.json";
+
 
 // User type definition
 interface User {
@@ -41,7 +43,7 @@ export default function UserProfiles() {
   const fetchUsers = async () => {
     try {
       const response = await axios.get<User[]>(
-        "http://localhost:5000/api/user-profiles",
+        `${config.baseUrl}/api/user-profiles`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -84,7 +86,7 @@ export default function UserProfiles() {
     try {
       const newStatus = currentStatus === 1 ? 0 : 1; // Toggle status
       const response = await axios.post(
-        "http://localhost:5000/api/users/toggle-user-status",
+        `${config.baseUrl}/api/users/toggle-user-status`,
         {
           user_id: userId,
           active: newStatus,

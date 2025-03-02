@@ -6,6 +6,8 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import AdminNav from "@/components/AdminNav";
 
+import config from "../data/config.json";
+
 // Mpesa Transaction type definition
 interface MpesaTransaction {
   id: number;
@@ -32,7 +34,7 @@ export default function MpesaTransactions() {
   const fetchTransactions = async () => {
     try {
       const response = await axios.get<MpesaTransaction[]>(
-        "http://localhost:5000/api/mpesa-payments",
+        `${config.baseUrl}/api/mpesa-payments`,
         {
           headers: {
             "Content-Type": "application/json",

@@ -9,6 +9,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 
+import config from "../../data/config.json";
+
+
 // Set Menu Item for Additional Profile Details
 import { setActiveLink } from "../../../app/Redux/Reducers/activeLinkSlice";
 
@@ -56,6 +59,7 @@ const Profile: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
 
   const dispatch = useDispatch();
 
@@ -70,13 +74,9 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchImages = async () => {
       const accessToken = localStorage.getItem("accessToken");
-      if (!accessToken) {
-        console.error("No access token found");
-        return;
-      }
 
       try {
-        const response = await fetch("http://localhost:5000/api/new-image-upload/images", {
+        const response = await fetch(`${config.baseUrl}/api/new-image-upload/images`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -99,11 +99,6 @@ const Profile: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!accessToken) {
-      setError("Access token is missing");
-      setLoading(false);
-      return; // Early exit if no accessToken
-    }
 
     const fetchProfileData = async () => {
       try {
@@ -132,13 +127,9 @@ const Profile: React.FC = () => {
     fetchProfileData();
   }, [accessToken]); 
 
-  useEffect(() => {
-    if (!accessToken) {
-      setError("Access token is missing");
-      setLoading(false);
-      return; // Early exit if no accessToken
-    }
 
+  useEffect(() => {
+    
     const fetchSubscriptionData = async () => {
       try {
           const subscriptionRes = await fetch("/backend/api/subscriptions/my-subscription", {
@@ -189,13 +180,13 @@ const Profile: React.FC = () => {
       }
     
       try {
-        const response = await fetch("/api/logout", {
+        const response = await fetch(`${config.baseUrl}/api/users/logout`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify({ token: accessToken }),
+          body: JSON.stringify({ token: refreshToken }),
         });
     
         if (response.ok) {
@@ -205,8 +196,7 @@ const Profile: React.FC = () => {
   
           dispatch(setUserDetails()); // Dispatch to Redux
     
-          console.log("Logout successful");
-          // Optionally redirect or update the UI
+          window.location.href = "/login";
   
         } else {
           console.error("Failed to logout:", await response.json());
@@ -259,7 +249,7 @@ const Profile: React.FC = () => {
               {images.map((image) => (
                 <div key={image.id}>
                   <img
-                    src={`http://localhost:5000/api/new-image-upload/uploads/${image.image_url}`}
+                    src={`${config.baseUrl}/api/new-image-upload/uploads/${image.image_url}`}
                     alt={`User Image - ${image.image_url}`}
                     className="w-full h-full object-cover"
                   />

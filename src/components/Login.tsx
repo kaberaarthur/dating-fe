@@ -8,11 +8,16 @@ import { setUserDetails } from "../app/Redux/Reducers/userSlice";
 import config from "../app/data/config.json";
 
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 const Login: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
+  const accessToken = localStorage.getItem("accessToken");
+  const [loading, setLoading] = useState(false);
+  
+
   // Check if logged in user exists
-  if (user.id) {
+  if (accessToken) {
     window.location.href = "/main"
   }
 
@@ -28,6 +33,7 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
 
     // Simple validation
@@ -40,7 +46,8 @@ const Login: React.FC = () => {
 
       // Sign the User In
       try {
-        const response = await fetch(`http://localhost:5000/api/users/login`, {
+        console.log("Starting Login");
+        const response = await fetch(`${config.baseUrl}/api/users/login`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -62,6 +69,9 @@ const Login: React.FC = () => {
           localStorage.setItem("accessToken", result.accessToken);
           localStorage.setItem("refreshToken", result.refreshToken);
 
+          console.log("Completed Login");
+
+
           getUserProfile(result.accessToken, result.user_id);
 
           // console.log(result.accessToken);
@@ -69,11 +79,14 @@ const Login: React.FC = () => {
             console.error("Unexpected error occured:", error);
         }
     }
+
+    setLoading(false);
   };
 
   const getUserProfile = async (accessToken: string, user_id: number) => {
+    console.log("Getting User Profile");
     try{
-        const response = await fetch(`http://localhost:5000/api/user-profiles/my-profile`, {
+        const response = await fetch(`${config.baseUrl}/api/user-profiles/my-profile`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -145,9 +158,17 @@ const Login: React.FC = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="bg-purple-900 text-white font-bold py-2 px-4 rounded hover:bg-purple-950"
+          className="bg-purple-900 text-white font-bold py-2 px-4 rounded hover:bg-purple-950 flex items-center justify-center"
+          disabled={loading}
         >
-          Login
+          {loading ? (
+            <>
+              <Loader2 className="animate-spin h-5 w-5 mr-2" />
+              Logging in...
+            </>
+          ) : (
+            "Login"
+          )}
         </button>
       </form>
     </div>

@@ -50,7 +50,7 @@ const Likes: React.FC = () => {
   const fetchLikes = async () => {
 
     if (!accessToken) {
-      console.error("Access token is missing.");
+      console.log("Access token is missing.");
       return;
     }
 
