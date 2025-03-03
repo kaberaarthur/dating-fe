@@ -3,12 +3,66 @@ import model from "../../../../public/model.png";
 import cupidarrow from "../../../../public/cupidarrow.png";
 import config from "../../data/config.json";
 import { motion } from "framer-motion";
-
 // Hero Icons
 import { XMarkIcon, HeartIcon } from "@heroicons/react/24/solid";
 
-// Dummy Data
-import dummyFemales from "../../../app/data/dummyFemales.json";
+// Define the type for user images
+type UserImage = {
+  id: number;
+  user_id: number;
+  image_url: string;
+  is_profile_picture: number;
+  uploaded_at: string;
+};
+
+// Define the type for endpoint profile data
+type EndpointProfile = {
+  id: number;
+  user_id: number;
+  name: string;
+  created_at: string;
+  profile_picture: string;
+  images_updated: number;
+  details_updated: number;
+  county: string | null;
+  town: string | null;
+  date_of_birth: string;
+  gender: string;
+  interests: string;
+  bio: string;
+  reason: string;
+  height: string | null;
+  fitness: string | null;
+  education: string | null;
+  career: string | null;
+  religion: string | null;
+  last_login: string;
+  active: number;
+  phone: string;
+  email: string;
+  user_type: string;
+  // Add the images array
+  images: UserImage[];
+};
+
+// Transform endpoint profile type to match UI needs
+type TransformedProfile = {
+  id: number;
+  name: string;
+  age: number;
+  location: string;
+  matchPercentage: number;
+  profileImage: string;
+  bio: string;
+  reason: string;
+  interests: string[];
+  gender: string;
+  county: string | null;
+  town: string | null;
+  active: number;
+  details: string[];
+  images: UserImage[];
+};
 
 type ProfileHeaderProps = {
   id: number;
@@ -70,7 +124,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   };
 
   // Array of emojis to display
-  const emojis = ["🔥", "😍", "❤️", "✨", "🎉"];
+  const emojis = ["💖", "💕", "😍", "💓", "💗"];
 
   return (
     <div className="flex flex-col items-center bg-white shadow-md border border-gray-200 rounded-md p-4 w-full max-w-4xl mx-auto">
@@ -96,8 +150,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           alt="Model Image"
           className="rounded-md w-64 h-64 object-cover"
         />
-        <button className="absolute bottom-2 right-2 bg-blue-600 text-white text-xs py-1 px-2 rounded-full hover:bg-blue-700">
-          Intro
+        <button className="absolute bottom-2 right-2 bg-lime-500 text-xs py-1 px-2 rounded-full hover:bg-blue-700 text-gray-900">
+          Online
         </button>
       </div>
       {/* Interaction Buttons */}
@@ -145,9 +199,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           <span>Superlike</span>
         </button>
       </div>
-      {/* Interaction Buttons */}
       <p className="text-gray-900 font-medium text-md mt-2">
-        If you like each other, we’ll let you know!
+        If you like each other, we'll let you know!
       </p>
     </div>
   );
@@ -177,48 +230,165 @@ const Details: React.FC<DetailsProps> = ({ title, details }) => (
   </div>
 );
 
+// Helper function to calculate age from date of birth
+const calculateAge = (dateOfBirth: string): number => {
+  const dob = new Date(dateOfBirth);
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDifference = today.getMonth() - dob.getMonth();
+  
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  
+  return age;
+};
+
+// Helper function to transform endpoint profile to the format needed by UI
+const transformProfile = (profile: EndpointProfile): TransformedProfile => {
+  // Parse interests from string to array
+  let interestsArray: string[] = [];
+  try {
+    interestsArray = JSON.parse(profile.interests);
+  } catch (e) {
+    // If parsing fails, make a fallback array
+    interestsArray = profile.interests ? [profile.interests] : [];
+  }
+
+  // Format location
+  const location = [
+    profile.town,
+    profile.county,
+    "United States" // Default country
+  ].filter(Boolean).join(", ");
+
+  // Calculate age from date of birth
+  const age = calculateAge(profile.date_of_birth);
+
+  // Format details array similar to dummy data
+  const details = [
+    `${profile.gender === 'male' ? 'Man' : 'Woman'} | ${profile.reason}`,
+    profile.height || "Height not specified",
+    profile.fitness ? `${profile.fitness} Build` : "Build not specified",
+    profile.education || "Education not specified",
+    profile.career ? `${profile.career}` : "Career not specified",
+    profile.religion || "Religion not specified"
+  ].filter(Boolean);
+
+  // Generate random match percentage between 65-95%
+  const matchPercentage = Math.floor(Math.random() * (95 - 65 + 1)) + 65;
+
+  return {
+    id: profile.id,
+    name: profile.name,
+    age,
+    location,
+    matchPercentage,
+    profileImage: profile.profile_picture,
+    bio: profile.bio || "No bio available",
+    reason: profile.reason || "Reason not specified",
+    interests: interestsArray,
+    gender: profile.gender,
+    county: profile.county,
+    town: profile.town,
+    active: profile.active,
+    details,
+    images: profile.images,
+  };
+};
+
 const MidSection: React.FC = () => {
-  const [profile, setProfile] = useState(dummyFemales[0]);
-  const [shuffledProfiles, setShuffledProfiles] = useState(dummyFemales);
-  const [currentIndex, setCurrentIndex] = useState(0); // Track the current profile index
+  // State for API profiles
+  const [profiles, setProfiles] = useState<EndpointProfile[]>([]);
+  const [transformedProfiles, setTransformedProfiles] = useState<TransformedProfile[]>([]);
+  const [currentProfile, setCurrentProfile] = useState<TransformedProfile | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Current User's images
+  const [images, setImages] = useState<UserImage[]>([]);
+
+  // Fetch profiles from API
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/user-profiles/the-profiles",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch profiles");
+        }
+
+        const data = await response.json();
+        setProfiles(data);
+      } catch (err) {
+        setError("An Error Occurred");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfiles();
+  }, []);
+
+  // Transform and shuffle profiles when API data is loaded
+  useEffect(() => {
+    if (profiles.length > 0) {
+      // Transform profiles to match UI needs
+      const transformed = profiles.map(transformProfile);
+      
+      // Shuffle the transformed profiles
+      const shuffled = shuffleArray(transformed);
+      
+      setTransformedProfiles(shuffled);
+      
+      // Set the first profile as the current one
+      if (shuffled.length > 0) {
+        setCurrentProfile(shuffled[0]);
+      }
+    }
+  }, [profiles]);
 
   // Shuffle function
   const shuffleArray = (array: any[]) => {
-    let shuffledArray = [...array]; // Make a copy of the array to prevent mutation of the original one
+    let shuffledArray = [...array];
     for (let i = shuffledArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Swap elements
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
     }
     return shuffledArray;
   };
 
-  useEffect(() => {
-    // Shuffle the dummyFemales array and set the first item as the profile
-    const shuffled = shuffleArray(dummyFemales);
-    setShuffledProfiles(shuffled); // Set shuffled list in state if you need to use it elsewhere
-    setProfile(shuffled[0]); // Set the first item from the shuffled list
-  }, []);
-
   // Function to move to the next profile and log the action
   const nextProfile = (actionType: string) => {
-    console.log(`Button clicked: ${actionType}`); // Log the action type (Pass, Like, Superlike)
-    console.log("Current Profile: ", shuffledProfiles[currentIndex]);
+    if (!currentProfile || transformedProfiles.length === 0) return;
+
+    console.log(`Button clicked: ${actionType}`);
+    console.log("Current Profile: ", currentProfile);
 
     if (actionType === "Like" || actionType === "Superlike") {
       console.log("Initiating a Match");
       // Add the Liked Profile as a Sub-Match
-      handleAddMatch(shuffledProfiles[currentIndex].id);
+      handleAddMatch(currentProfile.id);
     }
 
-    const nextIndex = currentIndex + 1;
-    if (nextIndex < shuffledProfiles.length) {
-      setProfile(shuffledProfiles[nextIndex]);
-      setCurrentIndex(nextIndex);
-    } else {
-      // Optionally, loop back to the first profile
-      setProfile(shuffledProfiles[0]);
-      setCurrentIndex(0);
-    }
+    const nextIndex = (currentIndex + 1) % transformedProfiles.length;
+    setCurrentIndex(nextIndex);
+    setCurrentProfile(transformedProfiles[nextIndex]);
+
+    // console.log("The Next Profile: ", transformedProfiles[nextIndex])
   };
 
   // Generate a Random Score Level
@@ -227,12 +397,12 @@ const MidSection: React.FC = () => {
   const handleAddMatch = async (matchingUser: number) => {
     try {
       // The API endpoint to send the POST request to
-      const endpoint = `${config.baseUrl}/api/matching`; // Replace with your API URL
+      const endpoint = `${config.baseUrl}/api/matching`;
       console.log(matchingUser);
 
       // Data to send
       const data = {
-        matched_user_id: matchingUser, // Replace with dynamic `matchingUser` properties if needed
+        matched_user_id: matchingUser,
         compatibility_score: generateRandomScore(),
         is_liked: 1,
       };
@@ -260,17 +430,32 @@ const MidSection: React.FC = () => {
     }
   };
 
+  // Show loading state
+  if (loading) {
+    return <div className="text-center py-8">Loading profiles...</div>;
+  }
+
+  // Show error state
+  if (error) {
+    return <div className="text-center py-8 text-red-500">{error}</div>;
+  }
+
+  // No profiles available
+  if (!currentProfile) {
+    return <div className="text-center py-8">No profiles available</div>;
+  }
+
   return (
     <div className="space-y-8 mt-6">
       {/* Profile Header */}
       <ProfileHeader
-        id={profile.id}
-        name={profile.name}
-        location={profile.location}
-        age={profile.age}
-        matchPercentage={profile.matchPercentage}
-        profileImage={profile.profileImage}
-        nextProfile={nextProfile} // Passing nextProfile to ProfileHeader
+        id={currentProfile.id}
+        name={currentProfile.name}
+        location={currentProfile.location}
+        age={currentProfile.age}
+        matchPercentage={currentProfile.matchPercentage}
+        profileImage={currentProfile.profileImage}
+        nextProfile={nextProfile}
       />
 
       {/* Mid-Section Content */}
@@ -279,20 +464,24 @@ const MidSection: React.FC = () => {
         <div className="space-y-4">
           <Section
             title="Current goal"
-            content={profile.bio}
+            content={currentProfile.bio}
             buttonText="Intro"
           />
-          <Section title="I like to make" content={profile.reason} buttonText="Intro" />
+          <Section 
+            title="I like to make" 
+            content={currentProfile.reason} 
+            buttonText="Intro" 
+          />
           <Section
             title="Interests"
-            content={profile.interests.join(", ")}
+            content={currentProfile.interests.join(", ")}
             buttonText="Intro"
           />
         </div>
 
         {/* Right Side */}
         <div>
-          <Details title="Details" details={profile.details} />
+          <Details title="Details" details={currentProfile.details} />
         </div>
       </div>
     </div>
