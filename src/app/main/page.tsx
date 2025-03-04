@@ -279,7 +279,10 @@ const Home: React.FC = () => {
         <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-4">
           {/* Left Section */}
           <div className="flex items-center space-x-6">
-            <img src={socialpendo.src} alt="Social Pendo Logo" className="h-10 w-auto" />
+            <Link href="/">
+              <img src={socialpendo.src} alt="Social Pendo Logo" className="h-10 w-auto" />
+            </Link>
+            
             {/* Main Navigation links (hidden on mobile) */}
             <div className="hidden md:flex space-x-6">
               <a

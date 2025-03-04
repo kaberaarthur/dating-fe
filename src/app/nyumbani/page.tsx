@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Footer from "../app/main/Footer/Footer";
+import Footer from "../main/Footer/Footer";
 
 
 // Assuming you have an image asset for the couple
