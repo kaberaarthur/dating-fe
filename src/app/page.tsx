@@ -16,7 +16,7 @@ export default function Home() {
         <header className="w-full max-w-4xl flex justify-between items-center py-4">
             <h1 className="text-2xl font-bold text-black">SocialPendo</h1>
             <Link href="/login">
-            <button className="bg-transparent text-black border border-black px-4 py-2 rounded-md hover:bg-gray-200">
+            <button className="bg-transparent text-black border border-black px-4 py-2 rounded-md hover:bg-purple-600 hover:text-white">
                 Have an account? Sign In
             </button>
             </Link>
@@ -67,7 +67,7 @@ export default function Home() {
             {/* App Store Links */}
             <div className="flex space-x-4 mb-8">
             <a
-                href="https://www.apple.com/app-store/"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center"
@@ -80,7 +80,7 @@ export default function Home() {
                 />
             </a>
             <a
-                href="https://play.google.com/store"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center"
