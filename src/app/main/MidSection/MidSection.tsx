@@ -6,6 +6,11 @@ import { motion } from "framer-motion";
 // Hero Icons
 import { XMarkIcon, HeartIcon } from "@heroicons/react/24/solid";
 
+// Images Display
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 // Define the type for user images
 type UserImage = {
   id: number;
@@ -71,6 +76,7 @@ type ProfileHeaderProps = {
   age: number;
   matchPercentage: number;
   profileImage: string;
+  images: UserImage[];
   nextProfile: (actionType: string) => void;
 };
 
@@ -108,6 +114,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   age,
   matchPercentage,
   profileImage,
+  images,
   nextProfile,
 }) => {
   const [showEmojis, setShowEmojis] = useState(false);
@@ -143,7 +150,34 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
         </div>
       </div>
-      {/* Profile Image */}
+      {/* Replace with Dynamic Images */}
+      <div className="w-full h-full mb-4 rounded-lg overflow-hidden border">
+          {images.length > 0 ? (
+            <Slider 
+                dots 
+                infinite 
+                speed={500} 
+                slidesToShow={1} 
+                slidesToScroll={1} 
+                autoplay 
+                autoplaySpeed={3000}
+                arrows={true}
+              >
+              {images.map((image) => (
+                <div key={image.id}>
+                  <img
+                    src={`${config.baseUrl}/api/new-image-upload/uploads/${image.image_url}`}
+                    alt={`User Image - ${image.image_url}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </Slider>
+          ) : (
+            <img src={"/avatar.jpg"} alt={name} className="w-full h-full object-cover" />
+          )}
+        </div>
+      {/* Profile Image 
       <div className="relative">
         <img
           src={`/${profileImage}`}
@@ -153,7 +187,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <button className="absolute bottom-2 right-2 bg-lime-500 text-xs py-1 px-2 rounded-full hover:bg-blue-700 text-gray-900">
           Online
         </button>
-      </div>
+      </div>*/}
       {/* Interaction Buttons */}
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 text-xl justify-center">
         <button
@@ -258,8 +292,7 @@ const transformProfile = (profile: EndpointProfile): TransformedProfile => {
   // Format location
   const location = [
     profile.town,
-    profile.county,
-    "United States" // Default country
+    profile.county
   ].filter(Boolean).join(", ");
 
   // Calculate age from date of birth
@@ -455,6 +488,7 @@ const MidSection: React.FC = () => {
         age={currentProfile.age}
         matchPercentage={currentProfile.matchPercentage}
         profileImage={currentProfile.profileImage}
+        images={currentProfile.images}
         nextProfile={nextProfile}
       />
 
