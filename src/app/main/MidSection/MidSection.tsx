@@ -353,7 +353,7 @@ const MidSection: React.FC = () => {
 
       setSuperlikesLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/superlikes/count", {
+        const response = await fetch(`${config.baseUrl}/api/superlikes/count`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -387,7 +387,7 @@ const MidSection: React.FC = () => {
 
       try {
         const response = await fetch(
-          "http://localhost:5000/api/user-profiles/the-profiles",
+          `${config.baseUrl}/api/user-profiles/the-profiles`,
           {
             method: "GET",
             headers: {
@@ -460,7 +460,7 @@ const MidSection: React.FC = () => {
 
     try {
       // POST request to update superlikes_record
-      const response = await fetch("http://localhost:5000/api/superlikes/send", {
+      const response = await fetch(`${config.baseUrl}/api/superlikes/send`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
