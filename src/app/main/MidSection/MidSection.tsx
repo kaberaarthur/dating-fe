@@ -91,6 +91,11 @@ type DetailsProps = {
   details: string[];
 };
 
+// Interface for superlikes count response from superlikes_record
+interface SuperlikesRecord {
+  amount: number;
+}
+
 // Animation variants for the 5 emojis
 const emojiVariants = {
   hidden: { opacity: 0, scale: 0 },
@@ -138,7 +143,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       <div className="flex items-center w-full justify-between mb-4">
         {/* Name and Location */}
         <div>
-          <h1 className="text-xl font-bold">{name + " " + id}</h1>
+          <h1 className="text-xl font-bold">{name}</h1>
           <p className="text-gray-900 text-sm">
             {age} • {location}
           </p>
@@ -177,17 +182,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             <img src={"/avatar.jpg"} alt={name} className="w-full h-full object-cover" />
           )}
         </div>
-      {/* Profile Image 
-      <div className="relative">
-        <img
-          src={`/${profileImage}`}
-          alt="Model Image"
-          className="rounded-md w-64 h-64 object-cover"
-        />
-        <button className="absolute bottom-2 right-2 bg-lime-500 text-xs py-1 px-2 rounded-full hover:bg-blue-700 text-gray-900">
-          Online
-        </button>
-      </div>*/}
+      
       {/* Interaction Buttons */}
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-4 text-xl justify-center">
         <button
@@ -339,8 +334,51 @@ const MidSection: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Current User's images
-  const [images, setImages] = useState<UserImage[]>([]);
+  // Handle Superlikes Stuff
+  const [superlikesModal, setSuperlikesModal] = useState(false);
+  const [superlikeCount, setSuperlikeCount] = useState(1);
+  const [maxSuperlikes, setMaxSuperlikes] = useState<number | null>(null);
+
+  const [superlikesLoading, setSuperlikesLoading] = useState(false);
+  const [superlikesError, setSuperlikesError] = useState<string>("");
+
+  // Fetch maximum superlikes from superlikes_record
+  useEffect(() => {
+    const fetchMaxSuperlikes = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        setSuperlikesError("No access token found");
+        return;
+      }
+
+      setSuperlikesLoading(true);
+      try {
+        const response = await fetch("http://localhost:5000/api/superlikes/count", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch maximum superlikes");
+        }
+
+        const data: SuperlikesRecord = await response.json();
+        setMaxSuperlikes(data.amount); // Set the maximum superlikes from superlikes_record
+
+        console.log("Maximum Superlikes Available: ", data.amount);
+      } catch (err) {
+        setSuperlikesError("An error occurred while fetching maximum superlikes");
+        console.error(err);
+      } finally {
+        setSuperlikesLoading(false);
+      }
+    };
+
+    fetchMaxSuperlikes();
+  }, []);
 
   // Fetch profiles from API
   useEffect(() => {
@@ -404,6 +442,62 @@ const MidSection: React.FC = () => {
     return shuffledArray;
   };
 
+  // Handle sending superlikes
+  const handleSendSuperlikes = async () => {
+    if (!currentProfile || maxSuperlikes === null) return;
+    if (superlikeCount > maxSuperlikes) {
+      alert(`You cannot send more than ${maxSuperlikes} superlikes!`);
+      return;
+    }
+
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      alert("Authentication token not found. Please log in again.");
+      return;
+    }
+
+    console.log(`Sending ${superlikeCount} Superlikes to ${currentProfile.name} of ID - ${currentProfile.id}`);
+
+    try {
+      // POST request to update superlikes_record
+      const response = await fetch("http://localhost:5000/api/superlikes/send", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          receiver_id: currentProfile.id,
+          amount: superlikeCount,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send superlikes");
+      }
+
+      const result = await response.json();
+      console.log("Superlikes sent successfully:", result);
+
+      // Proceed with existing logic
+      handleAddMatch(currentProfile.id); // Call the match function
+      setMaxSuperlikes((prev) => (prev !== null ? prev - superlikeCount : null)); // Update local maxSuperlikes
+
+      const nextIndex = (currentIndex + 1) % transformedProfiles.length;
+      setCurrentIndex(nextIndex);
+      setCurrentProfile(transformedProfiles[nextIndex]);
+    } catch (error) {
+      console.error("Error sending superlikes:", error);
+      alert("An error occurred while sending superlikes. Please try again.");
+      return;
+    }
+
+    // Close modal and move to next profile
+    setSuperlikesModal(false);
+    setSuperlikeCount(1);
+  };
+
+
   // Function to move to the next profile and log the action
   const nextProfile = (actionType: string) => {
     if (!currentProfile || transformedProfiles.length === 0) return;
@@ -411,17 +505,31 @@ const MidSection: React.FC = () => {
     console.log(`Button clicked: ${actionType}`);
     console.log("Current Profile: ", currentProfile);
 
-    if (actionType === "Like" || actionType === "Superlike") {
-      console.log("Initiating a Match");
-      // Add the Liked Profile as a Sub-Match
-      handleAddMatch(currentProfile.id);
+    // Handle "Like" action
+    if (actionType === "Pass") {
+      console.log("Pass this Profile");
+
+      const nextIndex = (currentIndex + 1) % transformedProfiles.length;
+      setCurrentIndex(nextIndex);
+      setCurrentProfile(transformedProfiles[nextIndex]);
     }
 
-    const nextIndex = (currentIndex + 1) % transformedProfiles.length;
-    setCurrentIndex(nextIndex);
-    setCurrentProfile(transformedProfiles[nextIndex]);
+    // Handle "Like" action
+    if (actionType === "Like") {
+      console.log("Initiating a Like Match");
+      handleAddMatch(currentProfile.id); // Add the Liked Profile as a Sub-Match
 
-    // console.log("The Next Profile: ", transformedProfiles[nextIndex])
+      const nextIndex = (currentIndex + 1) % transformedProfiles.length;
+      setCurrentIndex(nextIndex);
+      setCurrentProfile(transformedProfiles[nextIndex]);
+    }
+
+    // Handle "Superlike" action
+    if (actionType === "Superlike") {
+      console.log("Initiating a Superlike Match");
+      setSuperlikesModal(true);
+    }
+
   };
 
   // Generate a Random Score Level
@@ -492,7 +600,75 @@ const MidSection: React.FC = () => {
         nextProfile={nextProfile}
       />
 
-      {/* Mid-Section Content */}
+      {superlikesModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Send Superlikes to {currentProfile.name}</h2>
+            
+            {/* Display Max Superlikes */}
+            <p className="text-sm text-gray-600 mb-4">
+              Max Superlikes: {maxSuperlikes !== null ? maxSuperlikes : "Loading..."}
+            </p>
+
+            <div className="mb-6 flex items-center justify-center space-x-2">
+              {/* Subtract Button */}
+              <button
+                onClick={() => setSuperlikeCount((prev) => Math.max(1, prev - 1))}
+                className="bg-gray-200 text-gray-700 w-10 h-10 flex items-center justify-center rounded-md hover:bg-gray-300"
+              >
+                −
+              </button>
+              {/* Input */}
+              <input
+                type="number"
+                min="1"
+                max={maxSuperlikes || undefined} // Set max to maxSuperlikes
+                value={superlikeCount}
+                onChange={(e) =>
+                  setSuperlikeCount(
+                    Math.min(maxSuperlikes || Infinity, Math.max(1, parseInt(e.target.value) || 1))
+                  )
+                }
+                className="w-20 p-2 border border-gray-300 rounded-md text-center"
+              />
+              {/* Add Button */}
+              <button
+                onClick={() =>
+                  setSuperlikeCount((prev) =>
+                    maxSuperlikes !== null && prev >= maxSuperlikes ? prev : prev + 1
+                  )
+                }
+                className="bg-gray-200 text-gray-700 w-10 h-10 flex items-center justify-center rounded-md hover:bg-gray-300"
+                disabled={maxSuperlikes !== null && superlikeCount >= maxSuperlikes} // Disable if at max
+              >
+                +
+              </button>
+            </div>
+            <div className="flex space-x-2">
+              {/* Cancel Button */}
+              <button
+                onClick={() => {
+                  setSuperlikesModal(false);
+                  setSuperlikeCount(1); // Reset on cancel
+                }}
+                className="w-1/2 bg-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              {/* Send Superlikes Button */}
+              <button
+                onClick={handleSendSuperlikes}
+                className="w-1/2 bg-[#8207D1] text-white py-2 rounded-md hover:bg-[#782ea7]"
+                disabled={maxSuperlikes !== null && superlikeCount > maxSuperlikes} // Disable if over max
+              >
+                Send Superlikes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rest of the Component */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-4xl mx-auto">
         {/* Left Side */}
         <div className="space-y-4">
