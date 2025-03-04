@@ -6,7 +6,7 @@ import Footer from "../app/main/Footer/Footer";
 
 // Assuming you have an image asset for the couple
 // You can place the image in `public/couple.png` or use a placeholder for now
-const CoupleImage = "/couple.PNG"; // Replace with your actual image path or use a placeholder
+const CoupleImage = "/couple02.PNG"; // Replace with your actual image path or use a placeholder
 
 export default function Home() {
   return (
