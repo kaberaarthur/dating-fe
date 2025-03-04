@@ -23,6 +23,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/Redux/Store"; 
 
 
+import Link from "next/link";
+
+
 const EmailPage: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
 
@@ -68,10 +71,12 @@ const EmailPage: React.FC = () => {
       <div className="px-4 py-12 mx-auto lg:py-8 sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 bg-gray-900">
         {/* Backward Icon positioned above */}
         <div className="relative flex flex-col items-start space-y-4">
-          <BackwardIcon 
-            className="h-6 w-6 text-white cursor-pointer" 
-            onClick={handlePrevious} 
-          />
+          <Link href="/">
+            <BackwardIcon 
+              className="h-6 w-6 text-white cursor-pointer" 
+              onClick={handlePrevious} 
+            />
+          </Link>
 
           {/* Title with Calendar Icon in Background */}
           <div className="relative">
