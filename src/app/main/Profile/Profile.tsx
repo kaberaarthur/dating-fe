@@ -141,7 +141,7 @@ const Profile: React.FC = () => {
           });
   
           if (!subscriptionRes.ok) {
-              throw new Error("Failed to fetch subscription data");
+              console.log("Failed to fetch subscription data");
           }
   
           const subscriptionData: Subscription = await subscriptionRes.json();
@@ -257,7 +257,7 @@ const Profile: React.FC = () => {
               ))}
             </Slider>
           ) : (
-            <img src={user.profile_picture || "/default-avatar.png"} alt={user.name} className="w-full h-full object-cover" />
+            <img src={user.profile_picture || "/default-avatar.jpg"} alt={user.name} className="w-full h-full object-cover" />
           )}
         </div>
         <h2 className="text-xl font-semibold">{user.name}</h2>

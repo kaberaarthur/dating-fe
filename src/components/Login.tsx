@@ -101,7 +101,7 @@ const Login: React.FC = () => {
           }
           
           const result = await response.json();
-          dispatch(setUserDetails(result)); // Dispatch to Redux
+          dispatch(setUserDetails(result));
     }catch (error) {
         console.error("Unexpected error occured:", error);
         setError("Unexpected error occured");

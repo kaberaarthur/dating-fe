@@ -8,6 +8,9 @@ import AdminNav from "@/components/AdminNav";
 
 import config from "../data/config.json";
 
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../app/Redux/Store"; 
 
 // User type definition
 interface User {
@@ -32,6 +35,23 @@ export default function UserProfiles() {
   });
   const accessToken = localStorage.getItem("accessToken");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const user = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+      console.log('Redux User => ', user);
+  
+      if (!isAdmin(user.user_type)) {
+        console.log("This is not an admin");
+        window.location.href = "/main";
+      } else {
+        console.log("Admin logged in");
+      }
+    }, [user]); 
+  
+    const isAdmin = (user_type: string): boolean => {
+      return user_type === 'admin';
+    };
 
 
   useEffect(() => {

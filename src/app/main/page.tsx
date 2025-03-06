@@ -41,6 +41,7 @@ import { useNavigate } from "react-router-dom";
 interface Profile {
   images_updated: number;
   details_updated: number;
+  user_type: string;
 }
 
 interface Image {
@@ -63,6 +64,20 @@ const Home: React.FC = () => {
 
   const [images, setImages] = useState<Image[]>([]);
   const [profileImage, setProfileImage] = useState<Image | null>(null);
+
+  useEffect(() => {
+    console.log('Redux User => ', user);
+
+    if (!isAdmin(user.user_type)) {
+      console.log("This is not an admin");
+    } else {
+      console.log("Admin logged in");
+    }
+  }, [user]); 
+
+  const isAdmin = (user_type: string): boolean => {
+    return user_type === 'admin';
+  };
   
     useEffect(() => {
       const fetchImages = async () => {
@@ -130,6 +145,8 @@ const Home: React.FC = () => {
         const profileData: Profile = await profileRes.json();
         setProfile(profileData); // Save profile data to state
         console.log("The User Now: ", profileData);
+
+        dispatch(setUserDetails({ user_type: profileData.user_type }));
 
         // Check details_updated and images_updated
         if (profileData.details_updated === 0) {
@@ -308,13 +325,17 @@ const Home: React.FC = () => {
               </a>
 
               {/* Admin Pages */}
-              <a
-                href="/people"
-                className={`text-sm font-medium ${activeLink === "users" ? "text-violet-500" : "text-white"} hover:text-violet-500`}
-                onClick={() => navigate("/people")}
-              >
-                Admin
-              </a>
+              {isAdmin(user.user_type) && (
+                <a
+                  href="/people"
+                  className={`text-sm font-medium ${
+                    activeLink === "users" ? "text-violet-500" : "text-white"
+                  } hover:text-violet-500`}
+                  onClick={() => navigate("/people")}
+                >
+                  Admin
+                </a>
+              )}
             </div>
           </div>
 
@@ -401,13 +422,15 @@ const Home: React.FC = () => {
         </a>
 
         {/* Admin Pages */}
-        <a
-          href="/people"
-          className="block py-2"
-          onClick={() => handleLinkClick("users")}
-        >
-          Admin
-        </a>
+        {isAdmin(user.user_type) && (
+          <a
+            href="/people"
+            className="block py-2"
+            onClick={() => handleLinkClick("users")}
+          >
+            Admin
+          </a>
+        )}
 
         {/* Mobile buttons and profile */}
         <div className="mt-4 space-y-4">
