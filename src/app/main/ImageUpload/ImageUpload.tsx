@@ -229,9 +229,9 @@ export default function ImageUploader() {
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
         <div className="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
-          <p className="text-purple-800 text-sm">
-            All images will be cropped to a square format. Upload your images and use the cropping tool to select the best square area.
-            You can resize the square crop area to include more or less of your image.
+          <p className="text-red-600 text-xl">
+            You must upload four images of yourself to proceed to other parts of the app. We use this information as a security measure against spamming 
+            to ensure our users get utmost value and real connections from our app.
           </p>
         </div>
 

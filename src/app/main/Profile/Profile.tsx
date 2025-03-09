@@ -71,6 +71,12 @@ const Profile: React.FC = () => {
 
   const [images, setImages] = useState<Image[]>([]);
 
+  /*useEffect(() => {
+    console.log("Access Token: ", accessToken);
+    console.log("Refresh Token: ", refreshToken);
+  }, [])*/
+  
+
   useEffect(() => {
     const fetchImages = async () => {
       const accessToken = localStorage.getItem("accessToken");
@@ -184,7 +190,7 @@ const Profile: React.FC = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${refreshToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ token: refreshToken }),
         });
