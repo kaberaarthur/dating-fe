@@ -7,8 +7,7 @@ import { setUserDetails } from "../app/Redux/Reducers/userSlice";
 import Link from "next/link";
 import ReCAPTCHA from "react-google-recaptcha";
 
-const SITE_KEY = "6LeYV-8qAAAAAG7fJH8qaeUjBS_ZVl17qGfrPof0"; // Replace with your actual site key
-const SECRET_KEY = "6LeYV-8qAAAAAC4QvkTUwCddjGUqup9Y3wnmbMBr"; 
+const SITE_KEY = process.env.NEXT_PUBLIC_SITE_KEY!;
 
 const Form: React.FC = () => {
   const currentStep = useSelector((state: any) => state.step.currentStep);
