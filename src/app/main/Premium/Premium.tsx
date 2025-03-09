@@ -147,7 +147,7 @@ const Premium = () => {
   return (
     <div className="text-center py-4 lg:px-24">
       <div className="bg-black text-white py-4 px-4 text-lg font-medium">
-        Amazing OkCupid features you can’t live without.
+        Amazing SocialPendo features you can’t live without.
       </div>
 
       {/* Plans Section */}

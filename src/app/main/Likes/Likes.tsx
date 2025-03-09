@@ -150,6 +150,10 @@ const Likes: React.FC = () => {
     }
   };
   
+  const handleGetPremium = () => {
+    console.log("Button clicked!");
+    dispatch(setActiveLink("premium"));
+  };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4">
@@ -165,7 +169,10 @@ const Likes: React.FC = () => {
               <p className="text-lg font-semibold mt-6 mb-4">
                 You currently have ZERO likes. Buy Socialpendo Premium to get recommended more.
               </p>
-              <button className="bg-purple-800 text-white font-semibold py-2 px-6 rounded-lg hover:bg-purple-900">
+              <button
+                className="bg-purple-800 text-white font-semibold py-2 px-6 rounded-lg hover:bg-purple-900"
+                onClick={handleGetPremium}
+              >
                 Get Premium Social Pendo
               </button>
             </div>
