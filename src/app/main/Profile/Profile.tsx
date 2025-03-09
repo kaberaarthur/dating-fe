@@ -184,7 +184,7 @@ const Profile: React.FC = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${refreshToken}`,
           },
           body: JSON.stringify({ token: refreshToken }),
         });
