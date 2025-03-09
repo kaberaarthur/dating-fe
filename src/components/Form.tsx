@@ -2,11 +2,13 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementStep } from "../app/Redux/Reducers/stepSlice";
-
 import { RootState } from "../app/Redux/Store";
 import { setUserDetails } from "../app/Redux/Reducers/userSlice";
-
 import Link from "next/link";
+import ReCAPTCHA from "react-google-recaptcha";
+
+const SITE_KEY = "6LeYV-8qAAAAAG7fJH8qaeUjBS_ZVl17qGfrPof0"; // Replace with your actual site key
+const SECRET_KEY = "6LeYV-8qAAAAAC4QvkTUwCddjGUqup9Y3wnmbMBr"; 
 
 const Form: React.FC = () => {
   const currentStep = useSelector((state: any) => state.step.currentStep);
@@ -15,19 +17,26 @@ const Form: React.FC = () => {
 
   const [email, setEmail] = useState<string>(user.email);
   const [error, setError] = useState<string>("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!email) {
       setError("Email is required");
-    } else {
-      setError("");
-      console.log("Email submitted:", email);
-      dispatch(incrementStep());
-      dispatch(setUserDetails({ email })); // Dispatch only the email
+      return;
     }
-  };
 
+    if (!captchaToken) {
+      setError("Please complete the CAPTCHA");
+      return;
+    }
+
+    setError("");
+    console.log("Email submitted:", email);
+    dispatch(incrementStep());
+    dispatch(setUserDetails({ email })); // Dispatch only the email
+  };
 
   return (
     <div className="flex items-center justify-center bg-gray-100">
@@ -49,24 +58,11 @@ const Form: React.FC = () => {
           }`}
         />
         {error && <p className="text-red-500 text-sm">{error}</p>}
-        <div className="flex items-center gap-2">
-          <input type="checkbox" id="promotions" className="w-4 h-4" />
-          <label htmlFor="promotions" className="text-gray-600">
-            I don‘t want to miss discounts & promotional emails from SocialPendo
-          </label>
-        </div>
-        <div className="flex items-center gap-2">
-          <label htmlFor="promotions" className="text-gray-600">
-            Already signed up? 
-              <span className="text-purple-800 underline">
-                <Link href="/login">
-                  Login
-                </Link>
-              </span>
-          </label>
-        </div>
+
+        <ReCAPTCHA sitekey={SITE_KEY} onChange={(token: any) => setCaptchaToken(token)} />
+
         <button
-          type="submit" // Make sure the button type is 'submit' to trigger the form's onSubmit
+          type="submit"
           className="bg-purple-900 text-white font-bold py-2 px-4 rounded hover:bg-purple-950"
         >
           Next

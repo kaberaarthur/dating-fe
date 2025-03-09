@@ -33,9 +33,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-google-recaptcha": "^2.1.9",
     "@types/react-slick": "^0.23.13",
     "heroicons": "^2.2.0",
     "postcss": "^8",
+    "react-google-recaptcha": "^3.1.0",
     "shadcn-ui": "^0.9.4",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
