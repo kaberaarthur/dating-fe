@@ -1,18 +1,16 @@
-"use client";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementStep } from "../app/Redux/Reducers/stepSlice";
 import { RootState } from "../app/Redux/Store";
 import { setUserDetails } from "../app/Redux/Reducers/userSlice";
-import Link from "next/link";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const SITE_KEY = process.env.NEXT_PUBLIC_SITE_KEY!;
+const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
 
 const Form: React.FC = () => {
-  const currentStep = useSelector((state: any) => state.step.currentStep);
-  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
 
   const [email, setEmail] = useState<string>(user.email);
   const [error, setError] = useState<string>("");
@@ -20,13 +18,13 @@ const Form: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email) {
       setError("Email is required");
       return;
     }
 
-    if (!captchaToken) {
+    if (!isLocalhost && !captchaToken) {
       setError("Please complete the CAPTCHA");
       return;
     }
@@ -34,7 +32,7 @@ const Form: React.FC = () => {
     setError("");
     console.log("Email submitted:", email);
     dispatch(incrementStep());
-    dispatch(setUserDetails({ email })); // Dispatch only the email
+    dispatch(setUserDetails({ email }));
   };
 
   return (
@@ -58,7 +56,9 @@ const Form: React.FC = () => {
         />
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
-        <ReCAPTCHA sitekey={SITE_KEY} onChange={(token: any) => setCaptchaToken(token)} />
+        {!isLocalhost && (
+          <ReCAPTCHA sitekey={SITE_KEY} onChange={(token) => setCaptchaToken(token)} />
+        )}
 
         <button
           type="submit"

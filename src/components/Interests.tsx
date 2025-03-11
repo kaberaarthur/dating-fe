@@ -102,6 +102,7 @@ const Interests: React.FC = () => {
       email: user.email,
       password: user.password,
       phone: user.phone,
+      interests: selectedInterests
     };
   
     try {

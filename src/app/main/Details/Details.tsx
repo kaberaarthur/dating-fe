@@ -107,6 +107,7 @@ const Details: React.FC = () => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-[600px] border">
         <div className="text-center">
             <h2 className="text-4xl font-bold text-pink-700">Details</h2>
+            <p className="text-sm text-red-500">You must update the details below to proceed.</p>
         </div>
 
         <div className="mt-4">

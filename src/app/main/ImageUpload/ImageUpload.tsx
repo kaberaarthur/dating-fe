@@ -6,6 +6,10 @@ import "react-image-crop/dist/ReactCrop.css";
 
 import config from "../../data/config.json";
 
+import { setUserDetails } from "../../../app/Redux/Reducers/userSlice";
+import { setActiveLink } from "../../../app/Redux/Reducers/activeLinkSlice";
+import { useSelector, useDispatch } from "react-redux";
+
 const accessToken = localStorage.getItem("accessToken");
 
 interface ImageFile {
@@ -28,6 +32,7 @@ export default function ImageUploader() {
   const [currentImageIndex, setCurrentImageIndex] = useState<number | null>(null);
   const [currentImageType, setCurrentImageType] = useState<"main" | "secondary" | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const dispatch = useDispatch();
 
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
@@ -213,7 +218,8 @@ export default function ImageUploader() {
       }
   
       setAlert({ type: "success", message: "Files uploaded successfully!" });
-      setTimeout(() => window.location.reload(), 2000);
+      // setTimeout(() => window.location.reload(), 2000);
+      dispatch(setActiveLink("discover"));
     } catch (error) {
       console.error("Error uploading files:", error);
       setAlert({ type: "error", message: "Failed to upload files. Please try again." });
@@ -229,7 +235,7 @@ export default function ImageUploader() {
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
         <div className="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
-          <p className="text-red-600 text-xl">
+          <p className="text-red-600 text-sm">
             You must upload four images of yourself to proceed to other parts of the app. We use this information as a security measure against spamming 
             to ensure our users get utmost value and real connections from our app.
           </p>
