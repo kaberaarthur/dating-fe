@@ -68,12 +68,21 @@ const Profile: React.FC = () => {
   const userId = currUser.id;
 
   console.log("User ID: ", userId);
+  // if User ID is null log the user out
+  
 
   const [images, setImages] = useState<Image[]>([]);
 
   /*useEffect(() => {
-    console.log("Access Token: ", accessToken);
-    console.log("Refresh Token: ", refreshToken);
+    if (userId == null) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
+      dispatch(setUserDetails()); // Dispatch to Redux
+
+      console.log("Logout successful");
+      window.location.href = "/login"
+    }
   }, [])*/
   
 

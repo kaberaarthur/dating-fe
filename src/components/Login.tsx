@@ -59,6 +59,7 @@ const Login: React.FC = () => {
             const errorData = await response.json();
             console.log("Error logging in User:", errorData);
             setError("An Error Occurred");
+            setLoading(false);
             return;
           }
     
@@ -69,7 +70,7 @@ const Login: React.FC = () => {
           localStorage.setItem("accessToken", result.accessToken);
           localStorage.setItem("refreshToken", result.refreshToken);
 
-          console.log("Completed Login");
+          console.log("Completed Login of User: ", result.user_id);
 
 
           getUserProfile(result.accessToken, result.user_id);

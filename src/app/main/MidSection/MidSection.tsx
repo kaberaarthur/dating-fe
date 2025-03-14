@@ -53,6 +53,7 @@ type EndpointProfile = {
 // Transform endpoint profile type to match UI needs
 type TransformedProfile = {
   id: number;
+  user_id: number;
   name: string;
   age: number;
   location: string;
@@ -71,6 +72,7 @@ type TransformedProfile = {
 
 type ProfileHeaderProps = {
   id: number;
+  user_id: number;
   name: string;
   location: string;
   age: number;
@@ -308,6 +310,7 @@ const transformProfile = (profile: EndpointProfile): TransformedProfile => {
 
   return {
     id: profile.id,
+    user_id: profile.user_id,
     name: profile.name,
     age,
     location,
@@ -341,6 +344,9 @@ const MidSection: React.FC = () => {
 
   const [superlikesLoading, setSuperlikesLoading] = useState(false);
   const [superlikesError, setSuperlikesError] = useState<string>("");
+
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
 
   // Fetch maximum superlikes from superlikes_record
   useEffect(() => {
@@ -480,7 +486,8 @@ const MidSection: React.FC = () => {
       console.log("Superlikes sent successfully:", result);
 
       // Proceed with existing logic
-      handleAddMatch(currentProfile.id); // Call the match function
+      // Change this to user id
+      handleAddMatch(currentProfile.user_id); // Call the match function
       setMaxSuperlikes((prev) => (prev !== null ? prev - superlikeCount : null)); // Update local maxSuperlikes
 
       const nextIndex = (currentIndex + 1) % transformedProfiles.length;
@@ -517,7 +524,7 @@ const MidSection: React.FC = () => {
     // Handle "Like" action
     if (actionType === "Like") {
       console.log("Initiating a Like Match");
-      handleAddMatch(currentProfile.id); // Add the Liked Profile as a Sub-Match
+      handleAddMatch(currentProfile.user_id); // Add the Liked Profile as a Sub-Match
 
       const nextIndex = (currentIndex + 1) % transformedProfiles.length;
       setCurrentIndex(nextIndex);
@@ -539,7 +546,8 @@ const MidSection: React.FC = () => {
     try {
       // The API endpoint to send the POST request to
       const endpoint = `${config.baseUrl}/api/matching`;
-      console.log(matchingUser);
+      console.log("User to be Matched with: ", matchingUser);
+      
 
       // Data to send
       const data = {
@@ -552,7 +560,7 @@ const MidSection: React.FC = () => {
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${config.authToken}`,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
@@ -566,6 +574,7 @@ const MidSection: React.FC = () => {
       // Parse the response
       const result = await response.json();
       console.log("Match added successfully:", result);
+      
     } catch (error) {
       console.error("Error adding match:", error);
     }
@@ -591,6 +600,7 @@ const MidSection: React.FC = () => {
       {/* Profile Header */}
       <ProfileHeader
         id={currentProfile.id}
+        user_id={currentProfile.user_id}
         name={currentProfile.name}
         location={currentProfile.location}
         age={currentProfile.age}

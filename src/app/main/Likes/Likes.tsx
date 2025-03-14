@@ -66,7 +66,7 @@ const Likes: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        console.log(`Error: ${response.status} - ${response.statusText}`);
       }
 
       const data = await response.json();
@@ -186,7 +186,7 @@ const Likes: React.FC = () => {
                   className="flex items-start p-4 border rounded-lg shadow-sm bg-white"
                 >
                   <img
-                    src={like.profile_picture}
+                    src={`${config.baseUrl}/api/new-image-upload/uploads/${like.profile_picture}`}
                     alt={like.user_name}
                     className="w-24 h-24 rounded-sm object-cover flex-shrink-0"
                   />

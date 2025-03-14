@@ -25,7 +25,8 @@ const Users: React.FC = () => {
     const [userTypeFilter, setUserTypeFilter] = useState<string>('');
     const [idFilter, setIdFilter] = useState<string>('');
 
-    const manualAuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJrYWJlcmFAZXhhbXBsZS5jb20iLCJ1c2VyX3R5cGUiOiJhZG1pbiIsImlhdCI6MTczNzE4NDM1MywiZXhwIjoxNzM3MjI3NTUzfQ.ESu11e-DvLC0tmDJYQMpXtE8bA4PrEyaSZ_St5-teJA"
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
 
     // Fetch users from the API
     useEffect(() => {
@@ -34,7 +35,7 @@ const Users: React.FC = () => {
                 const response = await fetch(`${config.baseUrl}/api/user-profiles`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${manualAuthToken}`,
+                        'Authorization': `Bearer ${accessToken}`,
                         'Content-Type': 'application/json'
                     }
                 });
@@ -76,7 +77,7 @@ const Users: React.FC = () => {
             const response = await fetch(`${config.baseUrl}/api/user-profiles/${userId}`, {
                 method: 'PATCH',
                 headers: {
-                    'Authorization': `Bearer ${manualAuthToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ active: currentStatus === 1 ? 0 : 1 })
