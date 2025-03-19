@@ -49,8 +49,12 @@ const Messages: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchMessages();
-  }, [accessToken]);
+    const interval = setInterval(() => {
+      fetchMessages();
+    }, 5000); // Fetch every 5 seconds
+  
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [accessToken]);  
 
   const handleSelectConversation = (conversation: MessageList) => {
     setSelectedConversation(conversation);
