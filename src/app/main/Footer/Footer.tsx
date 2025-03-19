@@ -22,14 +22,11 @@ const Footer = () => {
 
           {/* Conditions Section */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Conditions</h4>
+            <h4 className="text-lg font-semibold mb-4">Terms & Conditions</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:underline">Privacy</a></li>
-              <li><a href="#" className="hover:underline">Cookies – Manage preferences</a></li>
-              <li><a href="#" className="hover:underline">Terms</a></li>
+              <li><a href="#" className="hover:underline">Privacy Policy</a></li>
+              <li><a href="/cookie-preferences" className="hover:underline">Cookies – Manage preferences</a></li>
               <li><a href="#" className="hover:underline">Community Guidelines</a></li>
-              <li><a href="#" className="hover:underline">Consumer Health Data Privacy Policy</a></li>
-              <li><a href="#" className="hover:underline">Colorado Safety Policy Information</a></li>
             </ul>
           </div>
 
@@ -40,7 +37,6 @@ const Footer = () => {
               <li><a href="#" className="hover:underline">Support</a></li>
               <li><a href="#" className="hover:underline">Security</a></li>
               <li><a href="#" className="hover:underline">Safety Tips</a></li>
-              <li><a href="#" className="hover:underline">Impressum</a></li>
             </ul>
           </div>
 
@@ -48,11 +44,10 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Follow</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:underline">Blog</a></li>
-              <li><a href="#" className="hover:underline">Tech Blog</a></li>
               <li><a href="#" className="hover:underline">Facebook</a></li>
               <li><a href="#" className="hover:underline">Instagram</a></li>
               <li><a href="#" className="hover:underline">Twitter</a></li>
+              <li><a href="#" className="hover:underline">Linkedin</a></li>
             </ul>
           </div>
         </div>
