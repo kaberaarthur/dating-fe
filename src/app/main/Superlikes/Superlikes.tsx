@@ -98,7 +98,7 @@ const Superlikes = () => {
             },
             body: JSON.stringify({ 
               amount: superlikes,
-              phoneNumber: phoneNumber 
+              phone: phoneNumber 
             })
         });
 
