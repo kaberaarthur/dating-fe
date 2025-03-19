@@ -6,11 +6,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../app/Redux/Store"; 
 
 const Superlikes = () => {
-  const [superlikes, setSuperlikes] = useState(5); // Default number of Superlikes is 5
-  const [superlikesCount, setSuperlikesCount] = useState(0); // Default number of Superlikes is 5
-  const [loading, setLoading] = useState(false); // Loading state for button
-  const [successMessage, setSuccessMessage] = useState(''); // Success alert message
-  const [phoneNumber, setPhoneNumber] = useState(''); // Success alert message
+  const [superlikes, setSuperlikes] = useState(5);
+  const [superlikesCount, setSuperlikesCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const accessToken = localStorage.getItem("accessToken");
   const user = useSelector((state: RootState) => state.user);
@@ -35,7 +35,6 @@ const Superlikes = () => {
       }
   
       const data = await response.json();
-      // console.log("User Account Data:", data); // Logs the user profile data
       setPhoneNumber(data.phone);
   
     } catch (error) {
@@ -67,7 +66,6 @@ const Superlikes = () => {
       }
   
       const data = await response.json();
-      // console.log("Number of Superlikes:", data.amount); // Logs the user profile data
       setSuperlikesCount(data.amount);
   
     } catch (error) {
@@ -80,31 +78,33 @@ const Superlikes = () => {
     fetchSuperlikesCount();
   }, []);
 
-  // Handle adding or subtracting superlikes
   const handleSuperlikesChange = (change: any) => {
     setSuperlikes((prev) => {
       const newSuperlikes = prev + change;
-      return newSuperlikes >= 5 ? newSuperlikes : 5; // Minimum 5 Superlikes
+      return newSuperlikes >= 5 ? newSuperlikes : 5;
     });
   };
 
   const handleBuySuperlikes = async () => {
-    setLoading(true); // Start loading
-    setSuccessMessage(''); // Reset any previous success message
+    setLoading(true);
+    setSuccessMessage('');
 
     try {
         const response = await fetch(`${config.baseUrl}/api/superlikes/buy`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`, // Replace with actual token
+                "Authorization": `Bearer ${accessToken}`,
             },
-            body: JSON.stringify({ amount: superlikes }) // Replace `superlikes` with the actual amount
+            body: JSON.stringify({ 
+              amount: superlikes,
+              phoneNumber: phoneNumber 
+            })
         });
 
         let data;
         try {
-            data = await response.json(); // Attempt to parse JSON
+            data = await response.json();
         } catch (jsonError) {
             throw new Error("Invalid JSON response from server.");
         }
@@ -119,8 +119,8 @@ const Superlikes = () => {
         console.error("Error purchasing Superlikes:", error);
         setSuccessMessage(`Error: ${error.message}`);
     } finally {
-        setLoading(false); // Stop loading
-        setSuperlikes(5); // Reset superlikes input (optional)
+        setLoading(false);
+        setSuperlikes(5);
     }
 };
 
@@ -129,7 +129,6 @@ const [withdrawLoading, setWithdrawLoading] = useState(false);
 const [withdrawMessage, setWithdrawMessage] = useState("");
 const [withdrawSuccess, setWithdrawSuccess] = useState(false);
 const [notification, setNotification] = useState("");
-
 
 const handleWithdrawSuperlikes = async () => {
   if (withdrawAmount <= 0) {
@@ -202,7 +201,13 @@ const handleWithdrawSuperlikes = async () => {
         </div>
 
         <div className="mb-6">
-          <p className="text-gray-700">Phone Number: {phoneNumber}</p>
+          <input
+            type="tel"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            placeholder="Enter phone number"
+          />
         </div>
 
         <div className="mb-6">
@@ -249,7 +254,7 @@ const handleWithdrawSuperlikes = async () => {
             console.log("Handle Withdraw Superlikes");
           }}
           className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 disabled:bg-red-300 flex justify-center items-center"
-          disabled={withdrawAmount < 1 || withdrawLoading} // Disable if amount is less than 1 or if loading
+          disabled={withdrawAmount < 1 || withdrawLoading}
         >
           {withdrawLoading ? (
             <div className="animate-spin h-5 w-5 border-t-2 border-white border-solid rounded-full"></div>
@@ -257,7 +262,6 @@ const handleWithdrawSuperlikes = async () => {
             `Withdraw ${withdrawAmount} (${withdrawAmount * 22}) Superlikes`
           )}
         </button>
-
         </div>
 
         {withdrawMessage && (
@@ -266,7 +270,6 @@ const handleWithdrawSuperlikes = async () => {
           </div>
         )}
 
-        {/* Notification for Withdraw */}
         {notification && (
           <div className="mt-4 p-3 bg-blue-100 text-blue-700 rounded-lg text-center">
             {notification}
@@ -274,7 +277,6 @@ const handleWithdrawSuperlikes = async () => {
         )}
       </div>
     </div>
-
   );
 };
 
